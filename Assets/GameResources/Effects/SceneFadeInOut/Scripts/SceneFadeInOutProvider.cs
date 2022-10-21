@@ -4,7 +4,7 @@ using UnityEngine.AddressableAssets;
 
 namespace GameResources.Effects.SceneFadeInOut.Scripts
 {
-    public class SceneFadeInOutProvider : MonoBehaviour
+    public sealed class SceneFadeInOutProvider : MonoBehaviour
     {
         [SerializeField]
         private Camera overlayCamera;

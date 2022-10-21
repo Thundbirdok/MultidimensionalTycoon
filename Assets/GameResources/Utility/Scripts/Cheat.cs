@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace GameResources.Utility.Scripts
 {
-    public class Cheat : MonoBehaviour
+    public sealed class Cheat : MonoBehaviour
     {
         [SerializeField]
         private GameObject panel;

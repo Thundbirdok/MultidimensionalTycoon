@@ -5,7 +5,7 @@ using Zenject;
 
 namespace GameResources.ScenesManagement.Scripts
 {
-    public class LoadSceneButton : MonoBehaviour
+    public sealed class LoadSceneButton : MonoBehaviour
     {
         [SerializeField]
         private SceneAsset scene;

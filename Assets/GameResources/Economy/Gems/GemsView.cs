@@ -5,7 +5,7 @@ using Zenject;
 
 namespace GameResources.Economy.Gems
 {
-    public class GemsView : MonoBehaviour
+    public sealed class GemsView : MonoBehaviour
     {
         [SerializeField]
         private TextMeshProUGUI resourceName;

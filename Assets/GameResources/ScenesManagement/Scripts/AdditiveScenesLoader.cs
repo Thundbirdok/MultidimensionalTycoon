@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameResources.ScenesManagement.Scripts
 {
-    public class AdditiveScenesLoader : MonoBehaviour
+    public sealed class AdditiveScenesLoader : MonoBehaviour
     {
         [SerializeField] 
         private string folder = "/Scenes/.../";

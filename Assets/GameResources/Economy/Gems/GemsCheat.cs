@@ -4,7 +4,7 @@ using Zenject;
 
 namespace GameResources.Economy.Gems
 {
-    public class GemsCheat : MonoBehaviour
+    public sealed class GemsCheat : MonoBehaviour
     {
         [SerializeField]
         private Button add;

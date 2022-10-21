@@ -6,7 +6,7 @@ using Zenject;
 
 namespace GameResources.ScenesManagement.Scripts
 {
-    public class SceneLoader : MonoBehaviour
+    public sealed class SceneLoader : MonoBehaviour
     {
         private SceneLoaderEventHandler _eventHandler;
         private SceneFadeInOutProvider _sceneFadeInOutProvider;

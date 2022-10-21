@@ -4,7 +4,7 @@ using Zenject;
 
 namespace GameResources.Save.Scripts
 {
-    public class SaveProgress : MonoBehaviour
+    public sealed class SaveProgress : MonoBehaviour
     {
         [SerializeField]
         private SceneContext sceneContext;

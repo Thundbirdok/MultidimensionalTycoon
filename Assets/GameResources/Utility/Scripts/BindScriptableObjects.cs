@@ -4,7 +4,7 @@ using Zenject;
 
 namespace GameResources.Utility.Scripts
 {
-    public class BindScriptableObjects : MonoInstaller
+    public sealed class BindScriptableObjects : MonoInstaller
     {
         [SerializeField]
         private List<ScriptableObject> scriptableObjects = new();

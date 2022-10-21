@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace GameResources.Effects.SceneFadeInOut.Scripts
 {
-    public class SceneFadeInOut : MonoBehaviour
+    public sealed class SceneFadeInOut : MonoBehaviour
     {
         [SerializeField]
         private Image image;

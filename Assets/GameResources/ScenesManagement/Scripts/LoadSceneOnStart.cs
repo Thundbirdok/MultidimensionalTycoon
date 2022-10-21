@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameResources.ScenesManagement.Scripts
 {
-    public class LoadSceneOnStart : MonoBehaviour
+    public sealed class LoadSceneOnStart : MonoBehaviour
     {
         [SerializeField]
         private SceneAsset scene;

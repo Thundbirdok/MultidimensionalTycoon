@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GameResources.ScenesManagement.Scripts
 {
     [CreateAssetMenu(fileName = "SceneLoaderEventHandler", menuName = "SceneManagement/SceneLoaderEventHandler")]
-    public class SceneLoaderEventHandler : ScriptableObject
+    public sealed class SceneLoaderEventHandler : ScriptableObject
     {
         public event Action OnBeginUnload;
         public event Action<SceneAsset> OnLoadRequest;

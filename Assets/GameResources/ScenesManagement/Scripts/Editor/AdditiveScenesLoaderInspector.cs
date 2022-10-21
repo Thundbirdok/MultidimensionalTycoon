@@ -4,13 +4,13 @@ using UnityEngine;
 namespace GameResources.ScenesManagement.Scripts.Editor
 {
     [CustomEditor(typeof(AdditiveScenesLoader))]
-    public class AdditiveScenesLoaderInspector : UnityEditor.Editor
+    public sealed class AdditiveScenesLoaderInspector : UnityEditor.Editor
     {
-        private AdditiveScenesLoader _sceneStartup;
+        private AdditiveScenesLoader _additiveScenesLoader;
 
         private void OnEnable()
         {
-            _sceneStartup = target as AdditiveScenesLoader;
+            _additiveScenesLoader = target as AdditiveScenesLoader;
         }
 
         public override void OnInspectorGUI()
@@ -19,12 +19,12 @@ namespace GameResources.ScenesManagement.Scripts.Editor
 
             if (GUILayout.Button("Open additive scenes"))
             {
-                _sceneStartup.OpenAdditiveScenesInEditor();
+                _additiveScenesLoader.OpenAdditiveScenesInEditor();
             }
 
             if (GUILayout.Button("Close additive scenes"))
             {
-                _sceneStartup.CloseAdditiveScenesInEditor();
+                _additiveScenesLoader.CloseAdditiveScenesInEditor();
             }
         }
     }

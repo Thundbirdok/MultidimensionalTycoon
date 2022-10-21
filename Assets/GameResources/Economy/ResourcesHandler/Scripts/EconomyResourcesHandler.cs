@@ -11,16 +11,30 @@ using Zenject;
 namespace GameResources.Economy.ResourcesHandler.Scripts
 {
     [CreateAssetMenu(fileName = "ResourcesHandler", menuName = "Economy/ResourcesHandler")]
-    public class EconomyResourcesHandler : ScriptableObjectInstaller, ISaveProgress
+    public sealed class EconomyResourcesHandler : ScriptableObjectInstaller, ISaveProgress
     {
         private const string FILE_NAME = "EconomyResources.json";
-
-        private bool _isLoaded;
 
         private JObject _jObject;
 
         private static string JsonPath
             => Path.Combine(Application.persistentDataPath, FILE_NAME);
+
+        public override void InstallBindings()
+        {
+            if (_jObject == null)
+            {
+                GetJObject();
+            }
+            
+            Container
+                .BindInterfacesAndSelfTo<EconomyResourcesHandler>()
+                .FromInstance(this)
+                .AsSingle();
+            
+            BindHandler(typeof(MoneyResourceHandler));
+            BindHandler(typeof(GemsResourceHandler));
+        }
 
         public void Save()
         {
@@ -30,22 +44,7 @@ namespace GameResources.Economy.ResourcesHandler.Scripts
             using JsonTextWriter writer = new(file);
             saveJObject.WriteTo(writer);
         }
-
-        public override void InstallBindings()
-        {
-            if (_isLoaded == false) Load();
-
-            BindHandler(typeof(MoneyResourceHandler));
-            BindHandler(typeof(GemsResourceHandler));
-        }
-
-        private void Load()
-        {
-            GetJObject();
-            
-            _isLoaded = true;
-        }
-
+        
         private void BindHandler(Type type)
         {
             var handler = (IResourceHandler)Activator.CreateInstance(type);
