@@ -31,14 +31,16 @@ namespace GameResources.Location.Scripts
         /// <returns>True if pointed any cell</returns>
         public bool TryGetPointedCell(in Vector3 point, out Cell pointedCell)
         {
+            /*
             if (point.y != 0)
             {
                 pointedCell = null;
 
                 return false;
             }
-
-            var leftDown = new Vector2(point.x, point.z) - Size / 2;
+            */
+            
+            var leftDown = new Vector2(point.x, point.z) + Size / 2;
 
             var isYInGrid = IsPointInGrid
             (
@@ -62,7 +64,6 @@ namespace GameResources.Location.Scripts
             pointedCell = null;
 
             return false;
-
         }
 
         private void SetCells(IReadOnlyList<Vector2Int> cellsIndexes)

@@ -29,11 +29,18 @@ namespace GameResources.Location.Scripts.Editor
             var gizmoDefaultColor = Gizmos.color;
             Gizmos.color = Color.cyan;
             
+            var gizmoDefaultMatrix = Gizmos.matrix;
+            Gizmos.matrix = grid.transform.localToWorldMatrix;
+            
+            var size = new Vector3(grid.Grid.Size.x, 0, grid.Grid.Size.y);
+            
             Gizmos.DrawWireCube
             (
-                grid.transform.position, 
-                grid.transform.TransformVector(new Vector3(grid.Grid.Size.x, 0, grid.Grid.Size.y))
+                Vector3.zero,
+                size
             );
+            
+            Gizmos.matrix = gizmoDefaultMatrix;            
             
             Gizmos.color = gizmoDefaultColor;
         }
@@ -70,13 +77,15 @@ namespace GameResources.Location.Scripts.Editor
         }
 
         private static void DrawRect(GridProvider grid, Vector3 center)
-        {
-            var localCenter = grid.transform.TransformPoint(center);
-            
+        {            
             var size = new Vector3(grid.Grid.CellSize, 0, grid.Grid.CellSize);
-            var localSize = grid.transform.TransformVector(size);
+                        
+            var gizmoDefaultMatrix = Gizmos.matrix; 
+            Gizmos.matrix = grid.transform.localToWorldMatrix;
 
-            Gizmos.DrawWireCube(localCenter, localSize);
+            Gizmos.DrawWireCube(center, size);
+            
+            Gizmos.matrix = gizmoDefaultMatrix;
         }
     }
 }

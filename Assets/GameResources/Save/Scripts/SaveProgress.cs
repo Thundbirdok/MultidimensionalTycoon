@@ -1,4 +1,3 @@
-using GameResources.ScenesManagement.Scripts;
 using UnityEngine;
 using Zenject;
 
@@ -8,18 +7,8 @@ namespace GameResources.Save.Scripts
     {
         [SerializeField]
         private SceneContext sceneContext;
-
-        private SceneLoaderEventHandler _eventHandler;
         
-        [Inject]
-        private void Construct(SceneLoaderEventHandler sceneLoaderEventHandler)
-        {
-            _eventHandler = sceneLoaderEventHandler;
-
-            _eventHandler.OnBeginUnload += Save;
-        }
-        
-        private void OnDestroy() => _eventHandler.OnBeginUnload -= Save;
+        private void OnDestroy() => Save();
 
         private void Save()
         {

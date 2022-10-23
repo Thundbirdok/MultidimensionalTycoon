@@ -278,7 +278,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1671240677}
   - component: {fileID: 1671240676}
-  - component: {fileID: 1671240675}
   m_Layer: 0
   m_Name: SaveProgress
   m_TagString: Untagged
@@ -286,24 +285,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1671240675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1671240674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 1671240676}
-  _identifier: 
-  _useSceneContext: 1
-  _context: {fileID: 1471579378}
-  _bindType: 0
 --- !u!114 &1671240676
 MonoBehaviour:
   m_ObjectHideFlags: 0
