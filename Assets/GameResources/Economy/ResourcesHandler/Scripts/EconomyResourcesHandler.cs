@@ -1,7 +1,7 @@
 using System;
 using System.IO;
-using GameResources.Economy.Gems;
-using GameResources.Economy.Money;
+using GameResources.Economy.Stone;
+using GameResources.Economy.Wood;
 using GameResources.Save.Scripts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,8 +32,8 @@ namespace GameResources.Economy.ResourcesHandler.Scripts
                 .FromInstance(this)
                 .AsSingle();
             
-            BindHandler(typeof(MoneyResourceHandler));
-            BindHandler(typeof(GemsResourceHandler));
+            BindHandler(typeof(WoodResourceHandler));
+            BindHandler(typeof(StoneResourceHandler));
         }
 
         public void Save()

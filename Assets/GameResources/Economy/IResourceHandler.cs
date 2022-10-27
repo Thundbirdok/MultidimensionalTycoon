@@ -7,6 +7,7 @@ namespace GameResources.Economy
         public event Action OnChangeValue;
         public event Action OnNotEnough;
 
+        public Type ResourceType { get; }
         public string Key { get; }
         public int Value { get; }
 

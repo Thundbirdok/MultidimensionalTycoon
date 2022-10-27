@@ -1,46 +1,36 @@
+using System;
+using GameResources.Location.Island.Scripts;
 using GameResources.Location.Scripts;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace GameResources.Location.Builder.Scripts
 {
     public sealed class Builder : MonoBehaviour
     {
-        [SerializeField] private Camera raycastCamera;
+        [SerializeField]
+        private CellPointer cellPointer;
 
-        private void Update()
+        [SerializeField]
+        private AssetReference buildingReference;
+        
+        private async void Update()
         {
-            if (Input.GetMouseButtonDown(0) == false)
+            if (!cellPointer.IsCellPointedNow || !Input.GetMouseButtonDown(0))
             {
                 return;
             }
 
-            if (TryGetPointedCell(out var cell))
-            {
-                Debug.Log(cell.Position);
-            }
-        }
+            var cell = cellPointer.PointedCell;
+            var gridTransform = cellPointer.PointedGrid.transform;
+            
+            var building = await buildingReference.InstantiateAsync(gridTransform).Task;
 
-        private bool TryGetPointedCell(out Cell cell)
-        {
-            var ray = raycastCamera.ScreenPointToRay(Input.mousePosition);
+            var localPosition = cell.GetPosition();
+            var position = gridTransform.transform.TransformPoint(localPosition);
 
-            if (Physics.Raycast(ray, out var hit, 50) == false)
-            {
-                cell = null;
-                
-                return false;
-            }
-
-            if (hit.collider.gameObject.TryGetComponent(out GridProvider grid) == false)
-            {
-                cell = null;
-                
-                return false;
-            }
-
-            var localPoint = grid.transform.InverseTransformPoint(hit.point);
-
-            return grid.Grid.TryGetPointedCell(localPoint, out cell);
+            building.transform.position = position;
+            building.transform.rotation = gridTransform.rotation;
         }
     }
 }
