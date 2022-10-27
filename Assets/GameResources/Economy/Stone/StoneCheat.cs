@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace GameResources.Economy.Gems
+namespace GameResources.Economy.Stone
 {
-    public sealed class GemsCheat : MonoBehaviour
+    public sealed class StoneCheat : MonoBehaviour
     {
         [SerializeField]
         private Button add;
@@ -12,12 +12,12 @@ namespace GameResources.Economy.Gems
         [SerializeField]
         private Button spend;
 
-        private GemsResourceHandler handler;
+        private StoneResourceHandler _handler;
 
         [Inject]
-        private void Construct(GemsResourceHandler gemsHandler)
+        private void Construct(StoneResourceHandler stoneHandler)
         {
-            handler = gemsHandler;
+            _handler = stoneHandler;
 
             add.onClick.AddListener(Add);
             spend.onClick.AddListener(Spend);
@@ -29,8 +29,8 @@ namespace GameResources.Economy.Gems
             spend.onClick.RemoveListener(Spend);
         }
 
-        private void Add() => handler.Add(5);
+        private void Add() => _handler.Add(5);
 
-        private void Spend() => handler.Spend(5);
+        private void Spend() => _handler.Spend(5);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using GameResources.Location.Island.Scripts;
 using UnityEngine;
 
 namespace GameResources.Location.Scripts
@@ -11,7 +12,7 @@ namespace GameResources.Location.Scripts
         public string Key => key;
 
         [SerializeField]
-        private GridProvider[] grids;
+        private LocationGridProvider[] grids;
         
         
     }

@@ -3,9 +3,9 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace GameResources.Economy.Gems
+namespace GameResources.Economy.Wood
 {
-    public sealed class GemsView : MonoBehaviour
+    public sealed class WoodView : MonoBehaviour
     {
         [SerializeField]
         private TextMeshProUGUI resourceName;
@@ -13,15 +13,15 @@ namespace GameResources.Economy.Gems
         [SerializeField]
         private TextMeshProUGUI value;
 
-        private GemsResourceHandler handler;
+        private WoodResourceHandler _handler;
 
-        private bool isSubscribed;
-        private bool isRed;
+        private bool _isSubscribed;
+        private bool _isRed;
 
         [Inject]
-        private void Construct(GemsResourceHandler gemsHandler)
+        private void Construct(WoodResourceHandler woodHandler)
         {
-            handler = gemsHandler;
+            _handler = woodHandler;
 
             Subscribe();
 
@@ -32,7 +32,7 @@ namespace GameResources.Economy.Gems
 
         private void OnEnable()
         {
-            if (handler == null)
+            if (_handler == null)
             {
                 gameObject.SetActive(false);
 
@@ -48,41 +48,41 @@ namespace GameResources.Economy.Gems
 
         private void Subscribe()
         {
-            if (isSubscribed)
+            if (_isSubscribed)
             {
                 return;
             }
 
-            handler.OnChangeValue += ShowValue;
-            handler.OnNotEnough += TurnRed;
+            _handler.OnChangeValue += ShowValue;
+            _handler.OnNotEnough += TurnRed;
 
-            isSubscribed = true;
+            _isSubscribed = true;
         }
 
         private void Unsubscribe()
         {
-            if (handler != null)
+            if (_handler != null)
             {
-                handler.OnChangeValue -= ShowValue;
-                handler.OnNotEnough -= TurnRed;
+                _handler.OnChangeValue -= ShowValue;
+                _handler.OnNotEnough -= TurnRed;
             }
 
-            isSubscribed = false;
+            _isSubscribed = false;
         }
 
         private void ShowValue()
         {
-            value.text = handler.Value.ToString();
+            value.text = _handler.Value.ToString();
         }
 
         private async void TurnRed()
         {
-            if (isRed)
+            if (_isRed)
             {
                 return;
             }
 
-            isRed = true;
+            _isRed = true;
 
             var valueDefaultColor = value.color;
             value.color = Color.red;
@@ -95,7 +95,7 @@ namespace GameResources.Economy.Gems
             value.color = valueDefaultColor;
             resourceName.color = nameDefaultColor;
 
-            isRed = false;
+            _isRed = false;
         }
     }
 }

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace GameResources.Location.Scripts
+namespace GameResources.Location.Island.Scripts
 {
-    public sealed class Grid
+    public sealed class LocationGrid
     {
         public readonly float CellSize;
 
@@ -12,9 +12,9 @@ namespace GameResources.Location.Scripts
 
         public Vector2Int SizeInCells { get; private set; }
 
-        public Cell[] Cells { get; private set; }
+        public LocationCell[] Cells { get; private set; }
 
-        public Grid(IReadOnlyList<Vector2Int> cellsIndexes, float cellSize)
+        public LocationGrid(IReadOnlyList<Vector2Int> cellsIndexes, float cellSize)
         {
             CellSize = cellSize;
 
@@ -27,29 +27,27 @@ namespace GameResources.Location.Scripts
         /// Get cell if point inside it
         /// </summary>
         /// <param name="point">Point</param>
-        /// <param name="pointedCell">Pointed cell</param>
+        /// <param name="pointedLocationCell">Pointed cell</param>
         /// <returns>True if pointed any cell</returns>
-        public bool TryGetPointedCell(in Vector3 point, out Cell pointedCell)
+        public bool TryGetPointedCell(in Vector3 point, out LocationCell pointedLocationCell)
         {
-            /*
-            if (point.y != 0)
+            if (Mathf.Abs(point.y) > Mathf.Epsilon)
             {
-                pointedCell = null;
+                pointedLocationCell = null;
 
                 return false;
-            }
-            */
+            }            
             
             var leftDown = new Vector2(point.x, point.z) + Size / 2;
 
-            var isYInGrid = IsPointInGrid
+            var isYInGrid = TryGetIndex
             (
                 leftDown.y,
                 SizeInCells.y, 
                 out var i
             );
             
-            var isXInGrid = IsPointInGrid
+            var isXInGrid = TryGetIndex
             (
                 leftDown.x,
                 SizeInCells.x,
@@ -58,21 +56,30 @@ namespace GameResources.Location.Scripts
 
             if (isYInGrid && isXInGrid)
             {
-                return TryGetCell(new Vector2Int(j, i), out pointedCell);
+                return TryGetCell(new Vector2Int(j, i), out pointedLocationCell);
             }
 
-            pointedCell = null;
+            pointedLocationCell = null;
 
             return false;
         }
 
+        public Vector3 GetCellPosition(Vector2Int index)
+        {
+            var position = new Vector2((index.x + 0.5f) * CellSize, (index.y + 0.5f) * CellSize);
+
+            position -= Size / 2;
+
+            return new Vector3(position.x, 0, position.y);
+        }
+
         private void SetCells(IReadOnlyList<Vector2Int> cellsIndexes)
         {
-            Cells = new Cell[cellsIndexes.Count];
+            Cells = new LocationCell[cellsIndexes.Count];
 
             for (var i = 0; i < cellsIndexes.Count; ++i)
             {
-                Cells[i] = new Cell(cellsIndexes[i]);
+                Cells[i] = new LocationCell(this, cellsIndexes[i]);
             }
         }
 
@@ -80,7 +87,7 @@ namespace GameResources.Location.Scripts
         {
             var newSize = Vector2Int.zero;
 
-            foreach (var cellPosition in Cells.Select(x => x.Position))
+            foreach (var cellPosition in Cells.Select(x => x.Index))
             {
                 if (newSize.x < cellPosition.x + 1)
                 {
@@ -96,7 +103,7 @@ namespace GameResources.Location.Scripts
             SizeInCells = newSize;
         }
 
-        private bool IsPointInGrid
+        private bool TryGetIndex
         (
             float point,
             int maxIndex,
@@ -108,21 +115,21 @@ namespace GameResources.Location.Scripts
             return index >= 0 && index < maxIndex;
         }
 
-        private bool TryGetCell(Vector2Int index, out Cell pointedCell)
+        private bool TryGetCell(Vector2Int index, out LocationCell locationCell)
         {
             foreach (var cell in Cells)
             {
-                if (cell.Position != index)
+                if (cell.Index != index)
                 {
                     continue;
                 }
 
-                pointedCell = cell;
+                locationCell = cell;
 
                 return true;
             }
 
-            pointedCell = null;
+            locationCell = null;
 
             return false;
         }
