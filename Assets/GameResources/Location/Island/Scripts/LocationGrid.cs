@@ -14,6 +14,8 @@ namespace GameResources.Location.Island.Scripts
 
         public LocationCell[] Cells { get; private set; }
 
+        private const float EPSILON = 0.01f; 
+        
         public LocationGrid(IReadOnlyList<Vector2Int> cellsIndexes, float cellSize)
         {
             CellSize = cellSize;
@@ -31,7 +33,7 @@ namespace GameResources.Location.Island.Scripts
         /// <returns>True if pointed any cell</returns>
         public bool TryGetPointedCell(in Vector3 point, out LocationCell pointedLocationCell)
         {
-            if (Mathf.Abs(point.y) > Mathf.Epsilon)
+            if (Mathf.Abs(point.y) > EPSILON)
             {
                 pointedLocationCell = null;
 

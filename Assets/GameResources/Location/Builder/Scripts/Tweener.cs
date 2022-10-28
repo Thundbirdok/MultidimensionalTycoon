@@ -7,11 +7,11 @@ namespace GameResources.Location.Builder.Scripts
     {
         public bool IsTweening;
         
-        private MonoBehaviour _behaviour;
+        private readonly MonoBehaviour _behaviour;
         
-        private GameObject _building;
+        private readonly GameObject _building;
 
-        private float _tweenDuration;
+        private readonly float _tweenDuration;
         
         private float _currentTweenTime;
         
@@ -82,15 +82,17 @@ namespace GameResources.Location.Builder.Scripts
                     
                     if (IsTweening == false)
                     {
-                        _building.transform.position = _targetPosition;
-
                         break;
                     }
                     
                     _currentTweenTime -= Time.deltaTime;
 
                     _building.transform.position = Vector3.Lerp
-                        (_targetPosition, _building.transform.position, _currentTweenTime / _tweenDuration);
+                    (
+                        _targetPosition,
+                        _building.transform.position,
+                        _currentTweenTime / _tweenDuration
+                    );
 
                     yield return null;
                 }

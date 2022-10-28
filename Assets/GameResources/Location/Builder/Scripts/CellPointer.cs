@@ -41,12 +41,7 @@ namespace GameResources.Location.Builder.Scripts
 
         private const float MAX_RAYCAST_DISTANCE = 50;
 
-        private RaycastHit[] _hits;
-
-        private void Start()
-        {
-            _hits = new RaycastHit[5];
-        }
+        private readonly RaycastHit[] _hits = new RaycastHit[5];
 
         private void Update() => GetPointedCell();
 
@@ -95,7 +90,13 @@ namespace GameResources.Location.Builder.Scripts
             return grid.LocationGrid.TryGetPointedCell(localPoint, out locationCell);
         }
 
-        private bool TryGetHitOnGrid(in RaycastHit[] hits, in int size, out LocationGridProvider grid, out RaycastHit hit)
+        private bool TryGetHitOnGrid
+        (
+            in RaycastHit[] hits, 
+            in int size, 
+            out LocationGridProvider grid, 
+            out RaycastHit hit
+        )
         {
             grid = null;
             hit = new RaycastHit();
@@ -104,14 +105,9 @@ namespace GameResources.Location.Builder.Scripts
 
             for (var i = 0; i < size; ++i)
             {
-                if (hits[i].collider.gameObject.TryGetComponent(out LocationGridProvider possibleGrid) == false)
-                {
-                    continue;
-                }
-
-                var hitDistance = Vector3.Distance(raycastCamera.transform.position, hits[i].point);
-
-                if (closestGridHitDistance <= hitDistance)
+                var hitDistance = CheckHit(hits[i], out var possibleGrid); 
+                
+                if (hitDistance > closestGridHitDistance)
                 {
                     continue;
                 }
@@ -122,6 +118,25 @@ namespace GameResources.Location.Builder.Scripts
             }
 
             return MAX_RAYCAST_DISTANCE - closestGridHitDistance > float.Epsilon;
+        }
+
+        private float CheckHit
+        (
+            in RaycastHit hit,
+            out LocationGridProvider grid
+        )
+        {
+            var hitted = hit.collider.gameObject;
+
+            if (hitted.TryGetComponent(out grid) == false)
+            {
+                return 0;
+            }
+
+            var cameraPosition = raycastCamera.transform.position;
+            var distance = Vector3.Distance(cameraPosition, hit.point);
+            
+            return distance;
         }
     }
 }
