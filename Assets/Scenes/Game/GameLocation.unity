@@ -246,12 +246,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20b581c1af130b48b9e08274a95b496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  builder: {fileID: 128189894}
   cellPointer: {fileID: 128189896}
-  buildingReference:
-    m_AssetGUID: 5301a818b07c421468f7e035e4bb6bb7
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  tweenDuration: 0.5
 --- !u!114 &128189896
 MonoBehaviour:
   m_ObjectHideFlags: 0

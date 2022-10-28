@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -8,27 +6,26 @@ namespace GameResources.Location.Builder.Scripts
     public class ChoosingBuildingPlaceVisualizer : MonoBehaviour
     {
         [SerializeField]
-        private CellPointer cellPointer;
-
+        private Builder builder;
+        
         [SerializeField]
-        private AssetReference buildingReference;
+        private CellPointer cellPointer;
+        
+        [SerializeField]
+        private float tweenDuration = 0.5f;
+        
+        private AssetReference _buildingReference;
 
         private GameObject _building;
 
-        private Vector3 _targetPosition;
-
-        private Coroutine _coroutine;
+        private Tweener _tweener;
         
-        private float _duration = 0.5f;
-
-        private bool _isTweening;
-        
-        private async void OnEnable()
+        private void OnEnable()
         {
-            _building = await buildingReference.InstantiateAsync().Task;
-            _building.SetActive(false);
-
-            _coroutine = StartCoroutine(TweenPosition());
+            if (builder.IsBuilding)
+            {
+                StartVisualize(builder.BuildingReference);
+            }
             
             Subscribe();
         }
@@ -36,13 +33,40 @@ namespace GameResources.Location.Builder.Scripts
         private void OnDisable()
         {
             Unsubscribe();
+            StopVisualize();
+        }
 
-            if (_coroutine != null)
-            {
-                StopCoroutine(_coroutine);
+        private void Subscribe()
+        {
+            builder.OnStartBuilding += StartVisualize;
+            builder.OnStopBuilding += StopVisualize;
+            
+            cellPointer.OnCellPointed += OnCellPointed;
+            cellPointer.OnNoCellPointed += OnNoCellPointed;
+        }
 
-                _coroutine = null;
-            }
+        private void Unsubscribe()
+        {
+            builder.OnStartBuilding -= StartVisualize;
+            builder.OnStopBuilding -= StopVisualize;
+            
+            cellPointer.OnCellPointed -= OnCellPointed;
+            cellPointer.OnNoCellPointed -= OnNoCellPointed;
+        }
+
+        private async void StartVisualize(AssetReference building)
+        {
+            _buildingReference = building;
+            
+            _building = await _buildingReference.InstantiateAsync().Task;
+            _building.SetActive(false);
+
+            _tweener = new Tweener(this, _building, tweenDuration);
+        }
+
+        private void StopVisualize()
+        {
+            _tweener = null;
             
             if (_building == null)
             {
@@ -50,82 +74,48 @@ namespace GameResources.Location.Builder.Scripts
             }
 
             _building.SetActive(false);
-            buildingReference.ReleaseInstance(_building);
+            _buildingReference.ReleaseInstance(_building);
             _building = null;
         }
-
-        private void Subscribe()
-        {
-            cellPointer.OnCellPointed += OnCellPointed;
-            cellPointer.OnNoCellPointed += OnNoCellPointed;
-        }
-
-        private void Unsubscribe()
-        {
-            cellPointer.OnCellPointed -= OnCellPointed;
-            cellPointer.OnNoCellPointed -= OnNoCellPointed;
-        }
-
+        
         private void OnCellPointed()
         {
+            if (builder.IsBuilding == false)
+            {
+                return;
+            }
+
+            if (_building == null)
+            {
+                return;
+            }
+            
             var cell = cellPointer.PointedCell;
             var gridTransform = cellPointer.PointedGrid.transform;
 
             var localPosition = cell.GetPosition();
             var position = gridTransform.transform.TransformPoint(localPosition);
 
-            if (_building.transform.parent != gridTransform || _building.activeSelf == false)
-            {
-                _isTweening = false;
-                
-                _building.transform.parent = gridTransform;
-                _building.transform.position = position;
-                _building.transform.rotation = gridTransform.rotation;
-            }
-            else
-            {
-                _targetPosition = position;
-                
-                _isTweening = true;
-            }
+            _tweener.SetPosition(gridTransform, position);
 
             _building.SetActive(true);
         }
 
         private void OnNoCellPointed()
         {
-            _isTweening = false;
+            if (builder.IsBuilding == false)
+            {
+                return;
+            }
+            
+            _tweener.IsTweening = false;
+            
+            if (_building == null)
+            {
+                return;
+            }
             
             _building.SetActive(false);
-        }
-
-        private IEnumerator TweenPosition()
-        {
-            var waitTween = new WaitUntil(() => _isTweening);
-            
-            while (true)
-            {
-                yield return waitTween;
-                
-                var t = _duration;
-
-                while (t > 0)
-                {
-                    if (_isTweening == false)
-                    {
-                        _building.transform.position = _targetPosition;
-
-                        break;
-                    }
-                    
-                    t -= Time.deltaTime;
-
-                    _building.transform.position = Vector3.Lerp
-                        (_targetPosition, _building.transform.position, t / _duration);
-
-                    yield return null;
-                }
-            }
         }
     }
 }

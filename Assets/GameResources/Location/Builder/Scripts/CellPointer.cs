@@ -43,7 +43,7 @@ namespace GameResources.Location.Builder.Scripts
 
         private RaycastHit[] _hits;
 
-        private void Awake()
+        private void Start()
         {
             _hits = new RaycastHit[5];
         }
@@ -57,6 +57,11 @@ namespace GameResources.Location.Builder.Scripts
                 PointedGrid = grid;
                 PointedCell = cell;
 
+                return;
+            }
+
+            if (!IsCellPointedNow)
+            {
                 return;
             }
 
