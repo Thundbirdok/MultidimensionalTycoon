@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b911ae76283b9b44a9b9c83e4a7c89c4, type: 3}
+  m_Name: DumbBuilding 1
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  buildingData: {fileID: 11400000, guid: 4bf7d8b3a200a7e4c96993dc0f5145b1, type: 2}
+  price:
+  - type:
+      rid: -2
+    value: 100
+  - type:
+      rid: -2
+    value: 0
+  - type:
+      rid: -2
+    value: 0
+  - type:
+      rid: -2
+    value: 101
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

@@ -1,24 +1,17 @@
 using System;
-using UnityEngine;
 
 namespace GameResources.Economy
 {
-    [Serializable]
     public class ResourceValue
     {
-        [SerializeReference]
-        private IResource type;
-        public IResource Type => type;
+        public int Value { get; }
 
-        [SerializeField]
-        private uint value;
+        public IResource Type { get; }
 
-        public uint Value => value;
-
-        public ResourceValue(IResource type, uint value)
+        public ResourceValue(IResource type, int value)
         {
-            this.type = type;
-            this.value = value;
+            Type = type;
+            Value = value;
         }
     }
 }

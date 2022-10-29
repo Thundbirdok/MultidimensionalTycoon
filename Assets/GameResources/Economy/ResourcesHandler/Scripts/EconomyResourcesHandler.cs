@@ -15,11 +15,11 @@ namespace GameResources.Economy.ResourcesHandler.Scripts
     {
         private const string FILE_NAME = "EconomyResources.json";
 
-        private JObject _jObject;
-
         private static string JsonPath
-            => Path.Combine(Application.persistentDataPath, FILE_NAME);
+            => Application.persistentDataPath + FILE_NAME;
 
+        private JObject _jObject;
+        
         public override void InstallBindings()
         {
             if (_jObject == null)
