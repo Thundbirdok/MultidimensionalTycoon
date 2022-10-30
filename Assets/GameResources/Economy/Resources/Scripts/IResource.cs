@@ -1,4 +1,4 @@
-namespace GameResources.Economy
+namespace GameResources.Economy.Resources.Scripts
 {
     public interface IResource
     {

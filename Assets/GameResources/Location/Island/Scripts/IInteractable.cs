@@ -1,4 +1,4 @@
-namespace GameResources.Location.Scripts
+namespace GameResources.Location.Island.Scripts
 {
     public interface IInteractable
     {

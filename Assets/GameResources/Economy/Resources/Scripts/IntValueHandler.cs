@@ -1,6 +1,6 @@
 using System;
 
-namespace GameResources.Utility.Scripts
+namespace GameResources.Economy.Resources.Scripts
 {
     public sealed class IntValueHandler
     {

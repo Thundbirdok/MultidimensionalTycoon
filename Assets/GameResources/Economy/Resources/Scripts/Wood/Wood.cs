@@ -1,4 +1,4 @@
-namespace GameResources.Economy.Wood
+namespace GameResources.Economy.Resources.Scripts.Wood
 {
     public class Wood : IResource
     {

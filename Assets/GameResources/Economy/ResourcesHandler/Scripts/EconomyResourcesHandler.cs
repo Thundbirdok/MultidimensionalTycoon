@@ -1,7 +1,8 @@
 using System;
 using System.IO;
-using GameResources.Economy.Stone;
-using GameResources.Economy.Wood;
+using GameResources.Economy.Resources.Scripts;
+using GameResources.Economy.Resources.Scripts.Stone;
+using GameResources.Economy.Resources.Scripts.Wood;
 using GameResources.Save.Scripts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

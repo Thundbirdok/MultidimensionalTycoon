@@ -1,4 +1,3 @@
-using GameResources.Location.Scripts;
 using UnityEngine;
 
 namespace GameResources.Location.Island.Scripts

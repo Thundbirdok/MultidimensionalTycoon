@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace GameResources.Economy.Stone
+namespace GameResources.Economy.Resources.Scripts.Stone
 {
     public sealed class StoneCheat : MonoBehaviour
     {

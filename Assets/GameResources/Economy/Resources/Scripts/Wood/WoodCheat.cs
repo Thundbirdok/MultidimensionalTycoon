@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace GameResources.Economy.Wood
+namespace GameResources.Economy.Resources.Scripts.Wood
 {
     public sealed class WoodCheat : MonoBehaviour
     {

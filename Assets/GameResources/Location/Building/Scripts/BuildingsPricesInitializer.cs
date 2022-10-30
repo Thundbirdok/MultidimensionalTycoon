@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GameResources.Economy;
+using GameResources.Economy.Resources;
+using GameResources.Economy.Resources.Scripts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;

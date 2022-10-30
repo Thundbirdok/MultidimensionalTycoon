@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
-using GameResources.Economy;
+using GameResources.Economy.Resources.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

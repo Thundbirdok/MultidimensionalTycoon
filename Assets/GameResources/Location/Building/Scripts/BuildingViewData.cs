@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using GameResources.Economy;
+using GameResources.Economy.Resources.Scripts;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 

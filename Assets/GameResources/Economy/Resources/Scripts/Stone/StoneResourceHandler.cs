@@ -1,7 +1,6 @@
 using System;
-using GameResources.Utility.Scripts;
 
-namespace GameResources.Economy.Stone
+namespace GameResources.Economy.Resources.Scripts.Stone
 {
     public sealed class StoneResourceHandler : IResourceHandler
     {

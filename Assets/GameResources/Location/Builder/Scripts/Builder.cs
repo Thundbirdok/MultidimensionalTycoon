@@ -45,7 +45,7 @@ namespace GameResources.Location.Builder.Scripts
         private AssetReference buildingReference;
 
         public AssetReference BuildingReference => buildingReference;
-        
+
         private void OnEnable()
         {
             IsBuilding = true;

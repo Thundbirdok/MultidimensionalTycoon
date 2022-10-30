@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace GameResources.Economy.Stone
+namespace GameResources.Economy.Resources.Scripts.Stone
 {
     public sealed class StoneView : MonoBehaviour
     {

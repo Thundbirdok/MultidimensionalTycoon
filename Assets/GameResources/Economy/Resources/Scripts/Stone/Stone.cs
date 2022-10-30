@@ -1,4 +1,4 @@
-namespace GameResources.Economy.Stone
+namespace GameResources.Economy.Resources.Scripts.Stone
 {
     public class Stone : IResource
     {

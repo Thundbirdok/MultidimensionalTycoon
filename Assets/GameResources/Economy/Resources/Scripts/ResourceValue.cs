@@ -1,6 +1,4 @@
-using System;
-
-namespace GameResources.Economy
+namespace GameResources.Economy.Resources.Scripts
 {
     public class ResourceValue
     {

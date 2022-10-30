@@ -1,8 +1,6 @@
-using System;
-using GameResources.Location.Island.Scripts;
 using UnityEngine;
 
-namespace GameResources.Location.Scripts
+namespace GameResources.Location.Island.Scripts
 {
     public sealed class Island : MonoBehaviour
     {
