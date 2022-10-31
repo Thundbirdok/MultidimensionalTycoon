@@ -1,6 +1,7 @@
 using System;
 using GameResources.Location.Island.Scripts;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace GameResources.Location.Builder.Scripts
 {
@@ -40,13 +41,21 @@ namespace GameResources.Location.Builder.Scripts
         private Camera raycastCamera;
 
         private const float MAX_RAYCAST_DISTANCE = 50;
-
+        private const float MAX_SQR_MAGNITUDE = MAX_RAYCAST_DISTANCE * MAX_RAYCAST_DISTANCE;
+        
         private readonly RaycastHit[] _hits = new RaycastHit[5];
 
         private void Update() => GetPointedCell();
 
         private void GetPointedCell()
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                MarkNoCellPointed();
+                
+                return;
+            }
+            
             if (TryGetPointedCell(out var grid, out var cell))
             {
                 PointedGrid = grid;
@@ -55,13 +64,7 @@ namespace GameResources.Location.Builder.Scripts
                 return;
             }
 
-            if (!IsCellPointedNow)
-            {
-                return;
-            }
-
-            IsCellPointedNow = false;
-            OnNoCellPointed?.Invoke();
+            MarkNoCellPointed();
         }
 
         private bool TryGetPointedCell(out LocationGridProvider grid, out LocationCell locationCell)
@@ -101,23 +104,23 @@ namespace GameResources.Location.Builder.Scripts
             grid = null;
             hit = new RaycastHit();
             
-            var closestGridHitDistance = MAX_RAYCAST_DISTANCE;
+            var closestGridHitSqrMagnitude = MAX_SQR_MAGNITUDE;
 
             for (var i = 0; i < size; ++i)
             {
-                var hitDistance = CheckHit(hits[i], out var possibleGrid); 
+                var hitSqrMagnitude = CheckHit(hits[i], out var possibleGrid); 
                 
-                if (hitDistance > closestGridHitDistance)
+                if (hitSqrMagnitude > closestGridHitSqrMagnitude)
                 {
                     continue;
                 }
 
                 hit = hits[i];
                 grid = possibleGrid;
-                closestGridHitDistance = hitDistance;
+                closestGridHitSqrMagnitude = hitSqrMagnitude;
             }
 
-            return MAX_RAYCAST_DISTANCE - closestGridHitDistance > float.Epsilon;
+            return MAX_SQR_MAGNITUDE - closestGridHitSqrMagnitude > float.Epsilon;
         }
 
         private float CheckHit
@@ -134,9 +137,20 @@ namespace GameResources.Location.Builder.Scripts
             }
 
             var cameraPosition = raycastCamera.transform.position;
-            var distance = Vector3.Distance(cameraPosition, hit.point);
+            var sqrMagnitude = Vector3.SqrMagnitude(hit.point - cameraPosition);
             
-            return distance;
+            return sqrMagnitude;
+        }
+        
+        private void MarkNoCellPointed()
+        {
+            if (!IsCellPointedNow)
+            {
+                return;
+            }
+
+            IsCellPointedNow = false;
+            OnNoCellPointed?.Invoke();
         }
     }
 }

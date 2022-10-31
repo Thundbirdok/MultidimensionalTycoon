@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using GameResources.Location.Building.Scripts;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace GameResources.Location.Builder.Scripts
 {
     public sealed class Builder : MonoBehaviour
     {
-        public event Action<AssetReference> OnStartBuilding;
+        public event Action<BuildingData> OnStartBuilding;
         public event Action OnStopBuilding;
 
         private bool _isBuilding;
@@ -29,7 +29,7 @@ namespace GameResources.Location.Builder.Scripts
 
                 if (_isBuilding)
                 {
-                    OnStartBuilding?.Invoke(buildingReference);
+                    OnStartBuilding?.Invoke(BuildingData);
                     
                     return;
                 }
@@ -38,35 +38,37 @@ namespace GameResources.Location.Builder.Scripts
             }
         }
         
+        public BuildingData BuildingData { get; private set; }
+
         [SerializeField]
         private CellPointer cellPointer;
 
         [SerializeField]
-        private AssetReference buildingReference;
+        private BuilderEventHandler builderEventHandler;
 
-        public AssetReference BuildingReference => buildingReference;
-
+        private bool IsCanBuildHere => IsBuilding && cellPointer.IsCellPointedNow;
+        
         private void OnEnable()
         {
-            IsBuilding = true;
+            builderEventHandler.OnChooseBuilding += OnChooseBuilding;
         }
 
         private void Update()
         {
-            if (!cellPointer.IsCellPointedNow || !Input.GetMouseButtonDown(0))
+            if (IsCanBuildHere == false || Input.GetMouseButtonDown(0) == false)
             {
                 return;
             }
 
-            _ = Build();
+            Build();
         }
 
-        private async Task Build()
+        private async void Build()
         {
             var cell = cellPointer.PointedCell;
             var gridTransform = cellPointer.PointedGrid.transform;
 
-            var building = await buildingReference.InstantiateAsync(gridTransform).Task;
+            var building = await BuildingData.Model.InstantiateAsync(gridTransform).Task;
 
             var localPosition = cell.GetPosition();
             var position = gridTransform.transform.TransformPoint(localPosition);
@@ -75,6 +77,13 @@ namespace GameResources.Location.Builder.Scripts
             building.transform.rotation = gridTransform.rotation;
 
             IsBuilding = false;
+        }
+
+        private void OnChooseBuilding(BuildingData data)
+        {
+            BuildingData = data;
+
+            IsBuilding = true;
         }
     }
 }

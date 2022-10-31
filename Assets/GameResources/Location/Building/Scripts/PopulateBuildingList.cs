@@ -1,10 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using GameResources.Location.Builder.Scripts;
 using UnityEngine;
-using Zenject;
+using Object = UnityEngine.Object;
 
 namespace GameResources.Location.Building.Scripts
 {
-    public class PopulateBuildingList : MonoBehaviour
+    [Serializable]
+    public class PopulateBuildingList
     {
+        public event Action OnPopulate;
+        
         [SerializeField]
         private BuildingsPricesInitializer buildingsPricesInitializer;
 
@@ -13,17 +20,16 @@ namespace GameResources.Location.Building.Scripts
 
         [SerializeField]
         private Transform container;
-        
+
         private BuildingsViewDataCollector _buildingsViewDataCollector;
+
+        private List<BuildingView> _buildingsViews = new List<BuildingView>();
+        public IReadOnlyList<BuildingView> BuildingsViews => _buildingsViews;
         
-        [Inject]
-        private void Construct(BuildingsViewDataCollector buildingsViewDataCollector)
+        public void Construct(BuildingsViewDataCollector buildingsViewDataCollector)
         {
             _buildingsViewDataCollector = buildingsViewDataCollector;
-        }
-        
-        private void Start()
-        {
+            
             if (buildingsPricesInitializer.IsInited)
             {
                 Populate();
@@ -34,21 +40,27 @@ namespace GameResources.Location.Building.Scripts
             buildingsPricesInitializer.OnInited += Populate;
         }
 
-        private void OnDestroy()
+        ~PopulateBuildingList()
         {
             buildingsPricesInitializer.OnInited -= Populate;
         }
 
-        private void Populate()
+        private async void Populate()
         {
             buildingsPricesInitializer.OnInited -= Populate;
 
             foreach (var building in _buildingsViewDataCollector.Buildings)
             {
-                var view = Instantiate(prefab, container);
+                var view = Object.Instantiate(prefab, container);
+
+                view.Set(building);
                 
-                view.Set(building.Icon, building.Price);
+                _buildingsViews.Add(view);
+
+                await Task.Yield();
             }
+            
+            OnPopulate?.Invoke();
         }
     }
 }

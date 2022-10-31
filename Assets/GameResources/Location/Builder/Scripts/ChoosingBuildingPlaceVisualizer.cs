@@ -1,3 +1,4 @@
+using GameResources.Location.Building.Scripts;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -14,7 +15,7 @@ namespace GameResources.Location.Builder.Scripts
         [SerializeField]
         private float tweenDuration = 0.5f;
         
-        private AssetReference _buildingReference;
+        private BuildingData _buildingData;
 
         private GameObject _building;
 
@@ -24,7 +25,7 @@ namespace GameResources.Location.Builder.Scripts
         {
             if (builder.IsBuilding)
             {
-                StartVisualize(builder.BuildingReference);
+                StartVisualize(builder.BuildingData);
             }
             
             Subscribe();
@@ -54,11 +55,11 @@ namespace GameResources.Location.Builder.Scripts
             cellPointer.OnNoCellPointed -= OnNoCellPointed;
         }
 
-        private async void StartVisualize(AssetReference building)
+        private async void StartVisualize(BuildingData building)
         {
-            _buildingReference = building;
+            _buildingData = building;
             
-            _building = await _buildingReference.InstantiateAsync().Task;
+            _building = await _buildingData.Model.InstantiateAsync().Task;
             _building.SetActive(false);
 
             _tweener = new Tweener(this, _building, tweenDuration);
@@ -74,7 +75,7 @@ namespace GameResources.Location.Builder.Scripts
             }
 
             _building.SetActive(false);
-            _buildingReference.ReleaseInstance(_building);
+            _buildingData.Model.ReleaseInstance(_building);
             _building = null;
         }
         

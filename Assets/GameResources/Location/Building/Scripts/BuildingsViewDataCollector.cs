@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using GameResources.Location.Building.Scripts;
 using UnityEditor;
 using UnityEngine;
 using Zenject;
 
-namespace GameResources.Location.Building.Scripts
+namespace GameResources.Location.Builder.Scripts
 {
-    [CreateAssetMenu(fileName = "BuildingsViewDataCollector", menuName = "Building/BuildingsViewDataCollector")]
+    [CreateAssetMenu(fileName = "BuildingsViewDataCollector", menuName = "Builder/BuildingsViewDataCollector")]
     public class BuildingsViewDataCollector : ScriptableObjectInstaller
     {
         public event Action OnInited;

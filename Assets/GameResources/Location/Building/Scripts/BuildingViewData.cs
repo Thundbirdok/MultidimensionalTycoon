@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using GameResources.Economy.Resources.Scripts;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace GameResources.Location.Building.Scripts
 {
@@ -16,15 +15,11 @@ namespace GameResources.Location.Building.Scripts
 
         [SerializeField]
         private BuildingData buildingData;
-        
-        public AssetReference Model => buildingData.Model;
-        public uint Size => buildingData.Size;
-        
+
+        public BuildingData BuildingData => buildingData;
+
         public List<ResourceValue> Price { get; private set; }
 
-        public void SetPrice(in List<ResourceValue> price)
-        {
-            Price = price;
-        }
+        public void SetPrice(in List<ResourceValue> price) => Price = price;
     }
 }

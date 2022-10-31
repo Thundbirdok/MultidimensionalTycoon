@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using GameResources.Economy.Resources.Scripts;
+using Lean.Gui;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,17 +11,30 @@ namespace GameResources.Location.Building.Scripts
 {
     public class BuildingView : MonoBehaviour
     {
+        public event Action<BuildingViewData> OnButtonClick;
+        
         [SerializeField]
         private Image image;
 
         [SerializeField]
         private TextMeshProUGUI priceText;
 
-        public void Set(Sprite icon, List<ResourceValue> price)
-        {
-            image.sprite = icon;
+        [SerializeField]
+        private LeanButton button;
 
-            SetPriceText(price);
+        private BuildingViewData _data;
+        
+        private void OnEnable() => button.OnClick.AddListener(InvokeOnButtonClick);
+
+        private void OnDisable() => button.OnClick.RemoveListener(InvokeOnButtonClick);
+
+        public void Set(BuildingViewData data)
+        {
+            _data = data;
+            
+            image.sprite = _data.Icon;
+
+            SetPriceText(_data.Price);
         }
 
         private void SetPriceText(List<ResourceValue> price)
@@ -43,5 +58,7 @@ namespace GameResources.Location.Building.Scripts
 
             priceText.text = sb.ToString();
         }
+        
+        private void InvokeOnButtonClick() => OnButtonClick?.Invoke(_data);
     }
 }
