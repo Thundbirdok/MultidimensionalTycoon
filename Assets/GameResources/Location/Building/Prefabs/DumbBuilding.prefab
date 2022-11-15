@@ -106,6 +106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5221515520383305099}
+  - component: {fileID: 3624330481456272899}
   m_Layer: 0
   m_Name: DumbBuilding
   m_TagString: Untagged
@@ -129,3 +130,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3624330481456272899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5221515520383305098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f2272b520558a44c882f1b8d354976f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modelRenderer: {fileID: 5221515519691671756}
+  available: {r: 0, g: 1, b: 0, a: 1}
+  notAvailable: {r: 1, g: 0, b: 0, a: 1}
+  <BuildingData>k__BackingField: {fileID: 11400000, guid: 4bf7d8b3a200a7e4c96993dc0f5145b1, type: 2}

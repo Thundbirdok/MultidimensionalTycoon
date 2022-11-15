@@ -12,11 +12,11 @@ namespace GameResources.Location.Island.Scripts
         [SerializeField]
         private List<Vector2Int> cellsPositions = new List<Vector2Int>();
 
-        public LocationGrid LocationGrid { get; private set; }
+        public LocationGrid Grid { get; private set; }
 
         private void OnEnable() => CreateGrid();
 
-        private void CreateGrid() => LocationGrid = new LocationGrid(cellsPositions, cellSize);
+        private void CreateGrid() => Grid = new LocationGrid(cellsPositions, cellSize);
 
 #if UNITY_EDITOR
 

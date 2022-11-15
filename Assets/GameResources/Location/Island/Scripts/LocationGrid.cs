@@ -75,6 +75,40 @@ namespace GameResources.Location.Island.Scripts
             return new Vector3(position.x, 0, position.y);
         }
 
+        public bool IsCellIndexInGrid(Vector2Int index)
+        {
+            if (index.x < 0 || index.y < 0)
+            {
+                return false;
+            }
+
+            if (index.x >= SizeInCells.x || index.y >= SizeInCells.y)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool TryGetCell(Vector2Int index, out LocationCell locationCell)
+        {
+            foreach (var cell in Cells)
+            {
+                if (cell.Index != index)
+                {
+                    continue;
+                }
+
+                locationCell = cell;
+
+                return true;
+            }
+
+            locationCell = null;
+
+            return false;
+        }
+
         private void SetCells(IReadOnlyList<Vector2Int> cellsIndexes)
         {
             Cells = new LocationCell[cellsIndexes.Count];
@@ -115,25 +149,6 @@ namespace GameResources.Location.Island.Scripts
             index = Mathf.FloorToInt(point / CellSize);
 
             return index >= 0 && index < maxIndex;
-        }
-
-        private bool TryGetCell(Vector2Int index, out LocationCell locationCell)
-        {
-            foreach (var cell in Cells)
-            {
-                if (cell.Index != index)
-                {
-                    continue;
-                }
-
-                locationCell = cell;
-
-                return true;
-            }
-
-            locationCell = null;
-
-            return false;
         }
     }
 }

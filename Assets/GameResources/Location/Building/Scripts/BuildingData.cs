@@ -16,7 +16,7 @@ namespace GameResources.Location.Building.Scripts
         public AssetReference Model => model;
 
         [SerializeField]
-        private uint size = 1;
-        public uint Size => size;
+        private int size = 1;
+        public int Size => size;
     }
 }

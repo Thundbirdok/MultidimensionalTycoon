@@ -1,6 +1,7 @@
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using GameResources.Location.Building.Scripts;
+using GameResources.Location.Island.Scripts;
 using UnityEngine;
 
 namespace GameResources.Location.Builder.Scripts
@@ -46,8 +47,32 @@ namespace GameResources.Location.Builder.Scripts
         [SerializeField]
         private BuilderEventHandler builderEventHandler;
 
-        private bool IsCanBuildHere => IsBuilding && cellPointer.IsCellPointedNow;
-        
+        private IReadOnlyCollection<LocationCell> _selectedCells;
+
+        private bool IsCanBuildHere(out IReadOnlyCollection<LocationCell> cells)
+        {
+            cells = null;
+            
+            if (IsBuilding == false)
+            {
+                return false;
+            }
+
+            if (cellPointer.IsCellPointedNow == false)
+            {
+                return false;
+            }
+
+            return BuilderPositionChecker
+                .IsValidPosition
+                (
+                    cellPointer.PointedCell,
+                    cellPointer.PointedGrid.Grid,
+                    BuildingData.Size,
+                    out cells
+                );
+        }
+
         private void OnEnable()
         {
             builderEventHandler.OnChooseBuilding += OnChooseBuilding;
@@ -55,11 +80,14 @@ namespace GameResources.Location.Builder.Scripts
 
         private void Update()
         {
-            if (IsCanBuildHere == false || Input.GetMouseButtonDown(0) == false)
+            if (IsCanBuildHere(out var cells) == false 
+                || Input.GetMouseButtonDown(0) == false)
             {
                 return;
             }
 
+            _selectedCells = cells;
+            
             Build();
         }
 
@@ -68,15 +96,39 @@ namespace GameResources.Location.Builder.Scripts
             var cell = cellPointer.PointedCell;
             var gridTransform = cellPointer.PointedGrid.transform;
 
-            var building = await BuildingData.Model.InstantiateAsync(gridTransform).Task;
-
             var localPosition = cell.GetPosition();
-            var position = gridTransform.transform.TransformPoint(localPosition);
+            
+            if (BuildingData.Size % 2 == 0)
+            {
+                var axisHalfCellOffset = cellPointer.PointedGrid.Grid.CellSize / 2; 
+                
+                var halfCellOffset = new Vector3
+                (
+                    axisHalfCellOffset,
+                    0,
+                    axisHalfCellOffset
+                );
 
-            building.transform.position = position;
-            building.transform.rotation = gridTransform.rotation;
+                localPosition += halfCellOffset;
+            }
+            
+            var position = gridTransform.TransformPoint(localPosition);
 
+            var building = await BuildingData.Model
+                .InstantiateAsync(position, gridTransform.rotation, gridTransform)
+                .Task;
+
+            OccupyCells();
+            
             IsBuilding = false;
+        }
+
+        private void OccupyCells()
+        {
+            foreach (var cell in _selectedCells)
+            {
+                cell.Occupy();
+            }
         }
 
         private void OnChooseBuilding(BuildingData data)

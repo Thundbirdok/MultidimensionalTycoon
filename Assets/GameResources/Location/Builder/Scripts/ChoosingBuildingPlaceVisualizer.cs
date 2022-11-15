@@ -1,6 +1,8 @@
+using System;
+using GameResources.Location.Builder.CellVisualizer.Scripts;
 using GameResources.Location.Building.Scripts;
+using GameResources.Location.Building.Scripts.BuildingVisualizer;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace GameResources.Location.Builder.Scripts
 {
@@ -11,15 +13,21 @@ namespace GameResources.Location.Builder.Scripts
         
         [SerializeField]
         private CellPointer cellPointer;
+
+        [SerializeField]
+        private CellsVisualizer cellsVisualizer;
         
         [SerializeField]
         private float tweenDuration = 0.5f;
-        
+
         private BuildingData _buildingData;
 
         private GameObject _building;
+        private IBuildingVisualiser _buildingVisualiser;
 
         private Tweener _tweener;
+
+        private GameObject _buildingPrefab;
         
         private void OnEnable()
         {
@@ -36,6 +44,8 @@ namespace GameResources.Location.Builder.Scripts
             Unsubscribe();
             StopVisualize();
         }
+
+        private void Update() => cellsVisualizer.Move();
 
         private void Subscribe()
         {
@@ -58,11 +68,28 @@ namespace GameResources.Location.Builder.Scripts
         private async void StartVisualize(BuildingData building)
         {
             _buildingData = building;
+
+            _buildingPrefab = await _buildingData.Model.LoadAssetAsync<GameObject>().Task;
             
-            _building = await _buildingData.Model.InstantiateAsync().Task;
+            _building = Instantiate(_buildingPrefab, transform);
+            
             _building.SetActive(false);
+            
+            SetBuildingVisualizerComponent();
 
             _tweener = new Tweener(this, _building, tweenDuration);
+        }
+
+        private void SetBuildingVisualizerComponent()
+        {
+            if (_building.TryGetComponent(out IBuildingVisualiser buildingVisualiser) == false)
+            {
+                Debug.LogError("No building visualizer component");
+                
+                return;
+            }
+            
+            _buildingVisualiser = buildingVisualiser;
         }
 
         private void StopVisualize()
@@ -75,8 +102,15 @@ namespace GameResources.Location.Builder.Scripts
             }
 
             _building.SetActive(false);
-            _buildingData.Model.ReleaseInstance(_building);
+            _buildingData.Model.ReleaseAsset();
+            _buildingPrefab = null;
+            
+            cellsVisualizer.FadeOutCurrentCells();
+            
+            Destroy(_building);
+            
             _building = null;
+            _buildingVisualiser = null;
         }
         
         private void OnCellPointed()
@@ -86,7 +120,7 @@ namespace GameResources.Location.Builder.Scripts
                 return;
             }
 
-            if (_building == null)
+            if (_buildingVisualiser == null)
             {
                 return;
             }
@@ -95,10 +129,38 @@ namespace GameResources.Location.Builder.Scripts
             var gridTransform = cellPointer.PointedGrid.transform;
 
             var localPosition = cell.GetPosition();
-            var position = gridTransform.transform.TransformPoint(localPosition);
+
+            if (_buildingData.Size % 2 == 0)
+            {
+                var axisHalfCellOffset = cellPointer.PointedGrid.Grid.CellSize / 2;
+                
+                var halfCellOffset = new Vector3
+                (
+                    axisHalfCellOffset,
+                    0,
+                    axisHalfCellOffset
+                );
+
+                localPosition += halfCellOffset;
+            }
+
+            var position = gridTransform.TransformPoint(localPosition);
 
             _tweener.SetPosition(gridTransform, position);
 
+            var isValidPosition = BuilderPositionChecker
+                .IsValidPosition
+                (
+                    cellPointer.PointedCell,
+                    cellPointer.PointedGrid.Grid,
+                    _buildingData.Size,
+                    out var cells
+                );
+            
+            _buildingVisualiser.SetIsAvailableToBuild(isValidPosition);
+
+            cellsVisualizer.VisualizeCells(cells, gridTransform);
+            
             _building.SetActive(true);
         }
 
@@ -108,13 +170,18 @@ namespace GameResources.Location.Builder.Scripts
             {
                 return;
             }
-            
-            _tweener.IsTweening = false;
-            
+
+            if (_tweener != null)
+            {
+                _tweener.IsTweening = false;
+            }
+
             if (_building == null)
             {
                 return;
             }
+            
+            cellsVisualizer.FadeOutCurrentCells();
             
             _building.SetActive(false);
         }

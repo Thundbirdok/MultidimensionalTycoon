@@ -81,7 +81,7 @@ namespace GameResources.Location.Builder.Scripts
                 return false;
             }
             
-            if (TryGetHitOnGrid(_hits, size, out grid, out var hit) == false)
+            if (TryGetHitOnGrid(size, out grid, out var hit) == false)
             {
                 locationCell = null;
                 
@@ -90,12 +90,11 @@ namespace GameResources.Location.Builder.Scripts
 
             var localPoint = grid.transform.InverseTransformPoint(hit.point);
 
-            return grid.LocationGrid.TryGetPointedCell(localPoint, out locationCell);
+            return grid.Grid.TryGetPointedCell(localPoint, out locationCell);
         }
 
         private bool TryGetHitOnGrid
         (
-            in RaycastHit[] hits, 
             in int size, 
             out LocationGridProvider grid, 
             out RaycastHit hit
@@ -108,14 +107,14 @@ namespace GameResources.Location.Builder.Scripts
 
             for (var i = 0; i < size; ++i)
             {
-                var hitSqrMagnitude = CheckHit(hits[i], out var possibleGrid); 
+                var hitSqrMagnitude = CheckHit(_hits[i], out var possibleGrid); 
                 
                 if (hitSqrMagnitude > closestGridHitSqrMagnitude)
                 {
                     continue;
                 }
 
-                hit = hits[i];
+                hit = _hits[i];
                 grid = possibleGrid;
                 closestGridHitSqrMagnitude = hitSqrMagnitude;
             }

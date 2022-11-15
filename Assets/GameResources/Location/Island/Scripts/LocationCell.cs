@@ -6,7 +6,7 @@ namespace GameResources.Location.Island.Scripts
     {
         public Vector2Int Index { get; }
         
-        public bool IsOccupied;
+        public bool IsOccupied { get; private set; }
 
         public IInteractable Interactable;
 
@@ -20,9 +20,8 @@ namespace GameResources.Location.Island.Scripts
         
         public void Interact() => Interactable.Interact();
 
-        public Vector3 GetPosition()
-        {
-            return _grid.GetCellPosition(Index);
-        }
+        public Vector3 GetPosition() => _grid.GetCellPosition(Index);
+
+        public void Occupy() => IsOccupied = true;
     }
 }
