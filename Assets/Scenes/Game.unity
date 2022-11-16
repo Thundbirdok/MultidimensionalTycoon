@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.18108621, g: 0.22666451, b: 0.3072999, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -195,8 +195,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1239087481}
-  - component: {fileID: 1239087482}
   - component: {fileID: 1239087483}
+  - component: {fileID: 1239087482}
   m_Layer: 0
   m_Name: AdditiveScenesLoader
   m_TagString: Untagged

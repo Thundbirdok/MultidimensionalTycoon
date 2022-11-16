@@ -1,7 +1,8 @@
 using System;
 using System.IO;
-using GameResources.Economy.Gems;
-using GameResources.Economy.Money;
+using GameResources.Economy.Resources.Scripts;
+using GameResources.Economy.Resources.Scripts.Stone;
+using GameResources.Economy.Resources.Scripts.Wood;
 using GameResources.Save.Scripts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,11 +16,11 @@ namespace GameResources.Economy.ResourcesHandler.Scripts
     {
         private const string FILE_NAME = "EconomyResources.json";
 
-        private JObject _jObject;
-
         private static string JsonPath
-            => Path.Combine(Application.persistentDataPath, FILE_NAME);
+            => Application.persistentDataPath + FILE_NAME;
 
+        private JObject _jObject;
+        
         public override void InstallBindings()
         {
             if (_jObject == null)
@@ -32,8 +33,8 @@ namespace GameResources.Economy.ResourcesHandler.Scripts
                 .FromInstance(this)
                 .AsSingle();
             
-            BindHandler(typeof(MoneyResourceHandler));
-            BindHandler(typeof(GemsResourceHandler));
+            BindHandler(typeof(WoodResourceHandler));
+            BindHandler(typeof(StoneResourceHandler));
         }
 
         public void Save()
