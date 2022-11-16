@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1010,6 +1010,7 @@ GameObject:
   - component: {fileID: 1443719057}
   - component: {fileID: 1443719059}
   - component: {fileID: 1443719058}
+  - component: {fileID: 1443719060}
   m_Layer: 5
   m_Name: Drag Handler
   m_TagString: Untagged
@@ -1169,6 +1170,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1443719055}
   m_CullTransparentMesh: 1
+--- !u!114 &1443719060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443719055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679634c92124a5a4896feb3b0cb9b329, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowPositionController: {fileID: 1539373044}
+  drag: {fileID: 1443719057}
 --- !u!1 &1471579377
 GameObject:
   m_ObjectHideFlags: 0
@@ -1260,8 +1275,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1539373038}
   - component: {fileID: 1539373039}
-  - component: {fileID: 1539373041}
   - component: {fileID: 1539373042}
+  - component: {fileID: 1539373041}
+  - component: {fileID: 1539373043}
+  - component: {fileID: 1539373044}
   m_Layer: 5
   m_Name: BuildingList
   m_TagString: Untagged
@@ -1347,6 +1364,51 @@ MonoBehaviour:
     buildingsPricesInitializer: {fileID: 1539373039}
     prefab: {fileID: 8544802834651173872, guid: 5210ee6741d244f49a78b71bab3542fe, type: 3}
     container: {fileID: 2109450491}
+--- !u!114 &1539373043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539373037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48577e8e13eb68f478df3e41ddbfd82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  horizontal: 1
+  horizontalOffset: 0
+  horizontalIntervalPixel: 400
+  horizontalIntervalRect: 0
+  horizontalIntervalParent: 0
+  horizontalSpeed: 10
+  vertical: 0
+  verticalOffset: 0
+  verticalIntervalPixel: 900
+  verticalIntervalRect: 0
+  verticalIntervalParent: 0
+  verticalSpeed: 10
+  disableWith: {fileID: 1443719057}
+  position: {x: -1, y: 0}
+  onPositionChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1539373044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539373037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e128fcc36295f22498133f8dc97a9fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  window: {fileID: 1539373038}
+  snap: {fileID: 1539373043}
+  left: -400
+  right: 0
 --- !u!1 &1616807638
 GameObject:
   m_ObjectHideFlags: 0
