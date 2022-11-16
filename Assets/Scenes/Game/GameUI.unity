@@ -1409,6 +1409,7 @@ MonoBehaviour:
   snap: {fileID: 1539373043}
   left: -400
   right: 0
+  builderEventHandler: {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
 --- !u!1 &1616807638
 GameObject:
   m_ObjectHideFlags: 0

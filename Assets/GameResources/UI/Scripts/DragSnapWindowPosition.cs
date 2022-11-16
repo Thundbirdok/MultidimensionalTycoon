@@ -1,3 +1,5 @@
+using GameResources.Location.Builder.Scripts;
+using GameResources.Location.Building.Scripts;
 using Lean.Gui;
 using UnityEngine;
 
@@ -16,33 +18,57 @@ namespace GameResources.UI.Scripts
         
         [SerializeField]
         private float right = 0;
+
+        [SerializeField]
+        private BuilderEventHandler builderEventHandler;
         
-        private bool _isGoRightOnClick = true;
+        private bool _openOnClick = true;
         
         private void OnEnable()
         {
             snap.OnPositionChanged.AddListener(SetPositionToGo);
+
+            builderEventHandler.OnChooseBuilding += Close;
         }
 
         private void OnDisable()
         {
             snap.OnPositionChanged.RemoveListener(SetPositionToGo);
+            
+            builderEventHandler.OnChooseBuilding -= Close;
         }
         
         private void SetPositionToGo(Vector2Int snapPosition)
         {
-            _isGoRightOnClick = snapPosition.x < 0;
+            _openOnClick = snapPosition.x < 0;
         }
 
         public void SnapPosition()
         {
-            var position = new Vector3(0, window.position.y, 0);
+            if (_openOnClick)
+            {
+                Open();
+                
+                return;
+            }
 
-            position.x = (left + right) / 2;
-            
-            position.x += _isGoRightOnClick ? 1 : -1;
+            Close();
+        }
+
+        public void Open()
+        {
+            var position = new Vector3((left + right) / 2 + 1, window.position.y, 0);
+
+            window.anchoredPosition = position;
+        }        
+        
+        public void Close()
+        {
+            var position = new Vector3((left + right) / 2 - 1, window.position.y, 0);
 
             window.anchoredPosition = position;
         }
+
+        private void Close(BuildingData data) => Close();
     }
 }

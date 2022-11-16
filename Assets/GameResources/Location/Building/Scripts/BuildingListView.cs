@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using GameResources.Location.Building.Scripts;
+using GameResources.Location.Builder.Scripts;
 using UnityEngine;
 using Zenject;
 
-namespace GameResources.Location.Builder.Scripts
+namespace GameResources.Location.Building.Scripts
 {
     public class BuildingListView : MonoBehaviour
     {
@@ -12,7 +12,7 @@ namespace GameResources.Location.Builder.Scripts
 
         [SerializeField]
         private PopulateBuildingList populateBuildingList;
-        
+
         private BuildingsViewDataCollector _buildingsViewDataCollector;
 
         private IReadOnlyList<BuildingView> BuildingsViews => populateBuildingList.BuildingsViews;
