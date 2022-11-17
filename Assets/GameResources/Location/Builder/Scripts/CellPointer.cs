@@ -38,7 +38,7 @@ namespace GameResources.Location.Builder.Scripts
         }
         
         [SerializeField] 
-        private Camera raycastCamera;
+        private UnityEngine.Camera raycastCamera;
 
         private const float MAX_RAYCAST_DISTANCE = 50;
         private const float MAX_SQR_MAGNITUDE = MAX_RAYCAST_DISTANCE * MAX_RAYCAST_DISTANCE;
