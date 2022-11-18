@@ -119,7 +119,7 @@ namespace GameResources.Location.Builder.Scripts
                 closestGridHitSqrMagnitude = hitSqrMagnitude;
             }
 
-            return MAX_SQR_MAGNITUDE - closestGridHitSqrMagnitude > float.Epsilon;
+            return grid != null;
         }
 
         private float CheckHit
