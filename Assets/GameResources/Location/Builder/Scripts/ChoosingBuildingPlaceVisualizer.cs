@@ -1,4 +1,3 @@
-using System;
 using GameResources.Location.Builder.CellVisualizer.Scripts;
 using GameResources.Location.Building.Scripts;
 using GameResources.Location.Building.Scripts.BuildingVisualizer;
@@ -12,11 +11,17 @@ namespace GameResources.Location.Builder.Scripts
         private Builder builder;
         
         [SerializeField]
+        private BuilderEventHandler builderEventHandler;
+        
+        [SerializeField]
+        private BuilderPositionChecker positionChecker;
+        
+        [SerializeField]
         private CellPointer cellPointer;
 
         [SerializeField]
         private CellsVisualizer cellsVisualizer;
-        
+
         [SerializeField]
         private float tweenDuration = 0.5f;
 
@@ -28,7 +33,7 @@ namespace GameResources.Location.Builder.Scripts
         private Tweener _tweener;
 
         private GameObject _buildingPrefab;
-        
+
         private void OnEnable()
         {
             if (builder.IsBuilding)
@@ -49,8 +54,8 @@ namespace GameResources.Location.Builder.Scripts
 
         private void Subscribe()
         {
-            builder.OnStartBuilding += StartVisualize;
-            builder.OnStopBuilding += StopVisualize;
+            builderEventHandler.OnStartBuilding += StartVisualize;
+            builderEventHandler.OnStopBuilding += StopVisualize;
             
             cellPointer.OnCellPointed += OnCellPointed;
             cellPointer.OnNoCellPointed += OnNoCellPointed;
@@ -58,8 +63,8 @@ namespace GameResources.Location.Builder.Scripts
 
         private void Unsubscribe()
         {
-            builder.OnStartBuilding -= StartVisualize;
-            builder.OnStopBuilding -= StopVisualize;
+            builderEventHandler.OnStartBuilding -= StartVisualize;
+            builderEventHandler.OnStopBuilding -= StopVisualize;
             
             cellPointer.OnCellPointed -= OnCellPointed;
             cellPointer.OnNoCellPointed -= OnNoCellPointed;
@@ -108,7 +113,7 @@ namespace GameResources.Location.Builder.Scripts
             cellsVisualizer.FadeOutCurrentCells();
             
             Destroy(_building);
-            
+
             _building = null;
             _buildingVisualiser = null;
         }
@@ -148,7 +153,7 @@ namespace GameResources.Location.Builder.Scripts
 
             _tweener.SetPosition(gridTransform, position);
 
-            var isValidPosition = BuilderPositionChecker
+            var isValidPosition = positionChecker
                 .IsValidPosition
                 (
                     cellPointer.PointedCell,
@@ -182,7 +187,7 @@ namespace GameResources.Location.Builder.Scripts
             }
             
             cellsVisualizer.FadeOutCurrentCells();
-            
+
             _building.SetActive(false);
         }
     }

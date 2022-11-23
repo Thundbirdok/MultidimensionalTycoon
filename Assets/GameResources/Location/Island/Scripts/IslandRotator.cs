@@ -1,11 +1,15 @@
+using System;
 using GameResources.Location.Scripts;
 using Lean.Touch;
+using System.Linq;
 using UnityEngine;
 
 namespace GameResources.Location.Island.Scripts
 {
     public sealed class IslandRotator : MonoBehaviour
     {
+        public event Action OnRotate; 
+        
         [SerializeField]
         private LeanFingerSwipe north;
         
@@ -19,7 +23,7 @@ namespace GameResources.Location.Island.Scripts
         private LeanFingerSwipe west;
 
         [SerializeField]
-        private Rotator _rotator;
+        private Rotator rotator;
 
         private void OnEnable()
         {
@@ -39,22 +43,34 @@ namespace GameResources.Location.Island.Scripts
 
         private void RotateNorth(LeanFinger finger)
         {
-            _rotator.Rotate(new Vector2Int(0, 1));
+            Rotate(new Vector2Int(0, 1));
         }
         
         private void RotateEast(LeanFinger finger)
         {
-            _rotator.Rotate(new Vector2Int(1, 0));
+            Rotate(new Vector2Int(1, 0));
         }
         
         private void RotateSouth(LeanFinger finger)
         {
-            _rotator.Rotate(new Vector2Int(0, -1));
+            Rotate(new Vector2Int(0, -1));
         }
         
         private void RotateWest(LeanFinger finger)
         {
-            _rotator.Rotate(new Vector2Int(-1, 0));
+            Rotate(new Vector2Int(-1, 0));
+        }
+
+        private void Rotate(Vector2Int direction)
+        {
+            if (LeanTouch.Fingers.Count(x => x.Index != -42) > 1)
+            {
+                return;
+            }
+            
+            OnRotate?.Invoke();
+            
+            rotator.Rotate(direction);
         }
     }
 }

@@ -22,7 +22,9 @@ namespace GameResources.Location.Scripts
         private Quaternion _newRotation;
         
         private bool _isRotating;
-        
+
+        private List<Vector3> _targetAxes;
+
         public void Rotate(Vector2Int direction)
         {
             if (_isRotating)
@@ -30,104 +32,82 @@ namespace GameResources.Location.Scripts
                 return;
             }
 
-            var list = new List<Vector3>
-            {
-                target.forward,
-                -target.forward,
-                target.up,
-                -target.up,
-                target.right,
-                -target.right
-            };
-
-            GetCodirectionalAxises(list, out var xAxis, out var yAxis, out var zAxis);
+            GetCoDirectionalAxes(out var axes);
             
-            SetNewRotation(direction, zAxis, yAxis, xAxis);
+            _newRotation = GetNewRotation(direction, axes);
 
             _ = RotateSmooth();
         }
 
-        private void SetNewRotation(Vector2Int direction, Vector3 zAxis, Vector3 yAxis, Vector3 xAxis)
+        private Quaternion GetNewRotation(Vector2Int direction, in Vector3[] axes)
         {
-            var localZAxis = target.InverseTransformVector(zAxis);
+            var localZAxis = target.InverseTransformVector(axes[2]);
 
-            if (direction.y != 0)
-            {
-                var newLocalZAxis = target.InverseTransformVector(yAxis * direction.y);
-                var addRotation = Quaternion.FromToRotation(localZAxis, newLocalZAxis);
+            var newLocalZAxis = direction.y != 0 ? axes[1] * direction.y : axes[0] * direction.x;
 
-                _newRotation = target.localRotation * addRotation;
-            }
-            else
-            {
-                var newLocalZAxis = target.InverseTransformVector(xAxis * direction.x);
-                var addRotation = Quaternion.FromToRotation(localZAxis, newLocalZAxis);
+            newLocalZAxis = target.InverseTransformVector(newLocalZAxis);
+            
+            var addRotation = Quaternion.FromToRotation(localZAxis, newLocalZAxis);
 
-                _newRotation = target.localRotation * addRotation;
-            }
+            return target.localRotation * addRotation;
         }
 
-        private void GetCodirectionalAxises
+        private void GetCoDirectionalAxes(out Vector3[] axes)
+        {
+            axes = new[]
+            {
+                Vector3.zero,
+                Vector3.zero,
+                Vector3.zero
+            };
+
+            if (_targetAxes == null)
+            {
+                SetTargetAxes();
+            }
+
+            GetCoDirectionalAxis(ref axes, 0, view.transform.right, 1);
+            GetCoDirectionalAxis(ref axes, 1, view.transform.up, 1);
+            GetCoDirectionalAxis(ref axes, 2, view.transform.forward, -1);
+        }
+
+        private void GetCoDirectionalAxis
         (
-            List<Vector3> list, 
-            out Vector3 xAxis, 
-            out Vector3 yAxis, 
-            out Vector3 zAxis
+            ref Vector3[] axes, 
+            in int index, 
+            in Vector3 viewAxis, 
+            in float desireAngle
         )
         {
-            var zClosestAngle = 0f;
-            zAxis = target.forward;
+            var closestAngle = 0f;
+            var closestAxis = viewAxis;
 
-            foreach (var vector in list)
+            foreach (var vector in _targetAxes)
             {
-                GetAxis
+                CheckAxis
                 (
-                    -1, 
-                    view.transform.forward, 
-                    vector, 
-                    ref zClosestAngle, 
-                    ref zAxis
+                    desireAngle, 
+                    viewAxis, 
+                    vector,
+                    axes,
+                    index,
+                    ref closestAngle, 
+                    ref closestAxis
                 );
             }
-
-            var xClosestAngle = 0f;
-            xAxis = target.forward;
-
-            foreach (var vector in list)
-            {
-                GetAxis
-                (
-                    1,
-                    view.transform.right,
-                    vector, 
-                    ref xClosestAngle, 
-                    ref xAxis
-                );
-            }
-
-            var yClosestAngle = 0f;
-            yAxis = target.forward;
-
-            foreach (var vector in list)
-            {
-                GetAxis
-                (
-                    1, 
-                    view.transform.up, 
-                    vector, 
-                    ref yClosestAngle, 
-                    ref yAxis
-                );
-            }
+            
+            axes[index] = closestAxis;
         }
 
-        private static void GetAxis
+        private static void CheckAxis
         (
-            float desireAngle, 
-            Vector3 a, 
-            Vector3 b, 
-            ref float closestAngle, 
-            ref Vector3 closestVector
+            in float desireAngle,
+            in Vector3 a,
+            in Vector3 b,
+            in Vector3[] axes,
+            in int index,
+            ref float closestAngle,
+            ref Vector3 closestAxis
         )
         {
             var angle = Vector3.Dot(b, a);
@@ -137,23 +117,36 @@ namespace GameResources.Location.Scripts
                 return;
             }
 
+            for (var i = 0; i < axes.Length; i++)
+            {
+                if (i >= index)
+                {
+                    continue;
+                }
+
+                if (Mathf.Abs(Vector3.Dot(axes[i], b)) - 0.01 > 0)
+                {
+                    return;
+                }
+            }
+
             closestAngle = angle;
-            closestVector = b;
+            closestAxis = b;
         }
 
         private async Task RotateSmooth()
         {
             _isRotating = true;
 
+            var speed = ROTATE_ANGLE / rotateDuration;
+            
             while (target.localRotation != _newRotation)
             {
-                var t = ROTATE_ANGLE / rotateDuration * Time.deltaTime;
-
                 target.localRotation = Quaternion.RotateTowards
                 (
-                    target.localRotation, 
-                    _newRotation, 
-                    t
+                    target.localRotation,
+                    _newRotation,
+                    speed * Time.deltaTime
                 );
 
                 await Task.Yield();
@@ -172,6 +165,23 @@ namespace GameResources.Location.Scripts
                 Mathf.Round(target.eulerAngles.y),
                 Mathf.Round(target.eulerAngles.z)
             );
+        }
+
+        private void SetTargetAxes()
+        {
+            var forward = target.forward;
+            var up = target.up;
+            var right = target.right;
+
+            _targetAxes = new List<Vector3>
+            {
+                forward,
+                -forward,
+                up,
+                -up,
+                right,
+                -right
+            };
         }
     }
 }

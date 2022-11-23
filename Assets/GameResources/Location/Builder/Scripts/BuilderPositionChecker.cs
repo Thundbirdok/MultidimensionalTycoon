@@ -5,9 +5,12 @@ using UnityEngine;
 
 namespace GameResources.Location.Builder.Scripts
 {
-    public static class BuilderPositionChecker
+    public class BuilderPositionChecker : MonoBehaviour
     {
-        public static bool IsValidPosition
+        [SerializeField]
+        private BuilderEventHandler builderEventHandler;
+        
+        public bool IsValidPosition
         (
             LocationCell pointedCell, 
             LocationGrid pointedGrid, 
@@ -20,7 +23,11 @@ namespace GameResources.Location.Builder.Scripts
                 return false;
             }
 
-            return cells.All(cell => cell.IsOccupied == false);
+            var isValid = cells.All(cell => cell.IsOccupied == false);
+            
+            builderEventHandler.InvokeValidPosition(isValid);
+
+            return isValid;
         }
         
         private static bool TryGetCells
