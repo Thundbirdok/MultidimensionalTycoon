@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using GameResources.Inputs;
 using GameResources.Location.Building.Scripts;
 using GameResources.Location.Island.Scripts;
 using UnityEngine;
@@ -8,9 +8,6 @@ namespace GameResources.Location.Builder.Scripts
 {
     public sealed class Builder : MonoBehaviour
     {
-        public event Action<BuildingData> OnStartBuilding;
-        public event Action OnStopBuilding;
-
         private bool _isBuilding;
         public bool IsBuilding
         {
@@ -30,12 +27,14 @@ namespace GameResources.Location.Builder.Scripts
 
                 if (_isBuilding)
                 {
-                    OnStartBuilding?.Invoke(BuildingData);
+                    InputStates.IsDragActive = false;
+                    eventHandler.InvokeStartBuilding(BuildingData);
                     
                     return;
                 }
                 
-                OnStopBuilding?.Invoke();
+                InputStates.IsDragActive = true;
+                eventHandler.InvokeStopBuilding();
             }
         }
         
@@ -45,9 +44,24 @@ namespace GameResources.Location.Builder.Scripts
         private CellPointer cellPointer;
 
         [SerializeField]
-        private BuilderEventHandler builderEventHandler;
+        private BuilderEventHandler eventHandler;
 
-        private IReadOnlyCollection<LocationCell> _selectedCells;
+        [SerializeField]
+        private BuilderPositionChecker positionChecker;
+        
+        private void OnEnable()
+        {
+            eventHandler.OnChooseBuilding += OnChooseBuilding;
+            eventHandler.OnAccept += Build;
+            eventHandler.OnCancel += StopBuilding;
+        }
+
+        private void OnDisable()
+        {
+            eventHandler.OnChooseBuilding -= OnChooseBuilding;
+            eventHandler.OnAccept -= Build;
+            eventHandler.OnCancel -= StopBuilding;
+        }
 
         private bool IsCanBuildHere(out IReadOnlyCollection<LocationCell> cells)
         {
@@ -63,7 +77,7 @@ namespace GameResources.Location.Builder.Scripts
                 return false;
             }
 
-            return BuilderPositionChecker
+            return positionChecker
                 .IsValidPosition
                 (
                     cellPointer.PointedCell,
@@ -73,26 +87,13 @@ namespace GameResources.Location.Builder.Scripts
                 );
         }
 
-        private void OnEnable()
+        private async void Build()
         {
-            builderEventHandler.OnChooseBuilding += OnChooseBuilding;
-        }
-
-        private void Update()
-        {
-            if (IsCanBuildHere(out var cells) == false 
-                || Input.GetMouseButtonDown(0) == false)
+            if (IsCanBuildHere(out var cells) == false)
             {
                 return;
             }
 
-            _selectedCells = cells;
-            
-            Build();
-        }
-
-        private async void Build()
-        {
             var cell = cellPointer.PointedCell;
             var gridTransform = cellPointer.PointedGrid.transform;
 
@@ -118,14 +119,16 @@ namespace GameResources.Location.Builder.Scripts
                 .InstantiateAsync(position, gridTransform.rotation, gridTransform)
                 .Task;
 
-            OccupyCells();
+            OccupyCells(cells);
             
             IsBuilding = false;
         }
 
-        private void OccupyCells()
+        private void StopBuilding() => IsBuilding = false;
+
+        private static void OccupyCells(in IReadOnlyCollection<LocationCell> selectedCells)
         {
-            foreach (var cell in _selectedCells)
+            foreach (var cell in selectedCells)
             {
                 cell.Occupy();
             }

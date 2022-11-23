@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using GameResources.Location.Island.Scripts;
+using Lean.Touch;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace GameResources.Location.Builder.Scripts
 {
@@ -38,8 +39,14 @@ namespace GameResources.Location.Builder.Scripts
         }
         
         [SerializeField] 
-        private Camera raycastCamera;
+        private UnityEngine.Camera raycastCamera;
 
+        [SerializeField]
+        private LeanFingerFilter use = new LeanFingerFilter(true);
+
+        [SerializeField]
+        private BuilderEventHandler builderEventHandler;
+        
         private const float MAX_RAYCAST_DISTANCE = 50;
         private const float MAX_SQR_MAGNITUDE = MAX_RAYCAST_DISTANCE * MAX_RAYCAST_DISTANCE;
         
@@ -49,10 +56,8 @@ namespace GameResources.Location.Builder.Scripts
 
         private void GetPointedCell()
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (use.UpdateAndGetFingers().Any(x => x.IsActive) == false)
             {
-                MarkNoCellPointed();
-                
                 return;
             }
             
@@ -72,7 +77,7 @@ namespace GameResources.Location.Builder.Scripts
             var ray = raycastCamera.ScreenPointToRay(Input.mousePosition);
 
             var size = Physics.RaycastNonAlloc(ray, _hits, MAX_RAYCAST_DISTANCE);
-            
+
             if (size == 0)
             {
                 grid = null;
@@ -89,7 +94,7 @@ namespace GameResources.Location.Builder.Scripts
             }
 
             var localPoint = grid.transform.InverseTransformPoint(hit.point);
-
+            
             return grid.Grid.TryGetPointedCell(localPoint, out locationCell);
         }
 
@@ -119,7 +124,7 @@ namespace GameResources.Location.Builder.Scripts
                 closestGridHitSqrMagnitude = hitSqrMagnitude;
             }
 
-            return MAX_SQR_MAGNITUDE - closestGridHitSqrMagnitude > float.Epsilon;
+            return grid != null;
         }
 
         private float CheckHit
@@ -143,11 +148,13 @@ namespace GameResources.Location.Builder.Scripts
         
         private void MarkNoCellPointed()
         {
-            if (!IsCellPointedNow)
+            if (IsCellPointedNow == false)
             {
                 return;
             }
 
+            builderEventHandler.InvokeValidPosition(false);
+            
             IsCellPointedNow = false;
             OnNoCellPointed?.Invoke();
         }
