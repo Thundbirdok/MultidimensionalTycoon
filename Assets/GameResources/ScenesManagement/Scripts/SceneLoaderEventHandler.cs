@@ -1,5 +1,4 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 
 namespace GameResources.ScenesManagement.Scripts
@@ -7,11 +6,8 @@ namespace GameResources.ScenesManagement.Scripts
     [CreateAssetMenu(fileName = "SceneLoaderEventHandler", menuName = "SceneManagement/SceneLoaderEventHandler")]
     public sealed class SceneLoaderEventHandler : ScriptableObject
     {
-        public event Action OnBeginUnload;
-        public event Action<SceneAsset> OnLoadRequest;
-        
-        public void BeginUnloadInvoke() => OnBeginUnload?.Invoke();
+        public event Action<SceneReference> OnLoadRequest;
 
-        public void RequestLoad(SceneAsset scene) => OnLoadRequest?.Invoke(scene);
+        public void RequestLoad(SceneReference scene) => OnLoadRequest?.Invoke(scene);
     }
 }

@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03f5d5da85266054aa62cf90841c947f, type: 3}
   m_Name: BuildingsViewDataCollector
   m_EditorClassIdentifier: 
+  buildings:
+  - {fileID: 11400000, guid: 7e54d6cc9e097904aa003e84538d976c, type: 2}
+  - {fileID: 11400000, guid: b9d4d23a4a4f1314bb8ae795a02d0d97, type: 2}

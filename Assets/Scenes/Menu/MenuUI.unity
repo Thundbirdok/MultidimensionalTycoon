@@ -306,10 +306,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -560,6 +560,7 @@ GameObject:
   - component: {fileID: 1972911462}
   - component: {fileID: 1972911461}
   - component: {fileID: 1972911464}
+  - component: {fileID: 1972911465}
   m_Layer: 5
   m_Name: Play
   m_TagString: Untagged
@@ -682,5 +683,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0615e893653be04d8990db2a483ce67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scene: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}
+  scene:
+    sceneAsset: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}
+    scenePath: Assets/Scenes/Game.unity
   button: {fileID: 1972911461}
+  _eventHandler: {fileID: 11400000, guid: c9eb5795f0c5bcb40bcdb52282bdc636, type: 2}
+--- !u!114 &1972911465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972911459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 1972911464}
+  _identifier: 
+  _useSceneContext: 0
+  _context: {fileID: 905120721}
+  _bindType: 0

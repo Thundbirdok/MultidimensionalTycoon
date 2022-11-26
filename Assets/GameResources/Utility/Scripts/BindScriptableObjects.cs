@@ -15,7 +15,8 @@ namespace GameResources.Utility.Scripts
             {
                 Container
                     .Bind(obj.GetType())
-                    .FromInstance(obj);
+                    .FromInstance(obj)
+                    .AsSingle();
             }
         }
     }

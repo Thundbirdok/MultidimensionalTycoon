@@ -1499,7 +1499,7 @@ MonoBehaviour:
     RequiredMouseButtons: 1
     RequiredSelectable: {fileID: 0}
   deltaThreshold: 10
-  maxSqrMagnitude: 20
+  maxSqrMagnitude: 300
 --- !u!114 &1409498526
 MonoBehaviour:
   m_ObjectHideFlags: 0

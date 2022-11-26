@@ -1,5 +1,4 @@
 using GameResources.Effects.SceneFadeInOut.Scripts;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -51,15 +50,16 @@ namespace GameResources.ScenesManagement.Scripts
             _eventHandler.OnLoadRequest -= Load;
         }
 
-        private async void Load(SceneAsset targetScene)
+        private async void Load(SceneReference targetScene)
         {
             await _sceneFadeInOutProvider.FadeOut();
 
-            _eventHandler.BeginUnloadInvoke();
-            
             _additiveScenesLoader.Unload();
 
-            SceneManager.LoadSceneAsync(targetScene.name);
+            SceneManager.LoadSceneAsync
+            (
+                targetScene.ScenePath.Split('/')[^1].Split('.')[0]
+            );
         }
     }
 }

@@ -437,7 +437,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0615e893653be04d8990db2a483ce67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scene: {fileID: 102900000, guid: ee3da98d56dd43a4493f4af95d63a887, type: 3}
+  scene:
+    sceneAsset: {fileID: 102900000, guid: ee3da98d56dd43a4493f4af95d63a887, type: 3}
+    scenePath: Assets/Scenes/Menu.unity
   button: {fileID: 5812454571514572599}
 --- !u!114 &5812454571514572601
 MonoBehaviour:

@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Zenject;
 
-namespace GameResources.Location.Builder.Scripts
+namespace GameResources.Location.Building.Scripts
 {
     public class BuildingsPricesInitializer : MonoBehaviour
     {
@@ -16,11 +16,8 @@ namespace GameResources.Location.Builder.Scripts
         
         public bool IsInited { get; private set; }
 
-        private const string FILE_NAME = "/GameResources/Location/Building/Settings/Prices.json";
-        
-        private static string JsonPath
-            => Application.dataPath + FILE_NAME;
-        
+        private const string FILE_PATH = "Settings/Prices";
+
         private BuildingsViewDataCollector _buildingsViewDataCollector;
 
         private JObject _jObject;
@@ -37,6 +34,11 @@ namespace GameResources.Location.Builder.Scripts
         {
             GetJObject();
 
+            if (_jObject == null)
+            {
+                return;
+            }
+            
             GetResourcesTypes();
 
             if (_buildingsViewDataCollector == null)
@@ -70,11 +72,13 @@ namespace GameResources.Location.Builder.Scripts
         private void GetJObject()
         {
             try
-            {
-                using var file = File.OpenText(JsonPath);
-                using JsonTextReader reader = new(file);
+            { 
+                var file = Resources.Load<TextAsset>(FILE_PATH);
 
-                _jObject = (JObject)JToken.ReadFrom(reader);
+                if (file != null)
+                {
+                    _jObject = (JObject)JToken.Parse(file.ToString());
+                }
             }
             catch (FileNotFoundException)
             {

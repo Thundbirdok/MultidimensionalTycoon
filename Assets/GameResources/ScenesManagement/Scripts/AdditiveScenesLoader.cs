@@ -1,32 +1,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
+
+#if  UNITY_EDITOR
+
+using UnityEditor.SceneManagement;
+
+#endif
 
 namespace GameResources.ScenesManagement.Scripts
 {
     public sealed class AdditiveScenesLoader : MonoBehaviour
     {
-        [SerializeField] 
-        private string folder = "/Scenes/.../";
-
-        [SerializeField] 
-        private List<SceneAsset> scenesAssets;
-
+        [SerializeField]
+        private List<SceneReference> scenesAssets;
+        
         private readonly List<Scene> _openedScenes = new();
 
         public async Task Load()
         {
-            List<Task<SceneInstance>> tasks = new();
+            var tasks = new List<Task<Scene>>();
 
             foreach (var sceneAsset in scenesAssets)
             {
-                var task = LoadAdditiveScene(sceneAsset.name);
+                var task = LoadAdditiveScene(sceneAsset.ScenePath);
 
                 tasks.Add(task);
             }
@@ -37,23 +37,37 @@ namespace GameResources.ScenesManagement.Scripts
             (
                 tasks.Select
                 (
-                    x => x.Result.Scene
+                    x => x.Result
                 )
             );
         }
 
         public void Unload()
         {
-            foreach (var scene in _openedScenes) SceneManager.UnloadSceneAsync(scene);
+            foreach (var scene in _openedScenes)
+            {
+                SceneManager.UnloadSceneAsync(scene);
+            }
         }
 
-        private Task<SceneInstance> LoadAdditiveScene(string sceneName)
+        private async static Task<Scene> LoadAdditiveScene(string sceneName)
         {
-            return Addressables.LoadSceneAsync
+            var asyncOperation = SceneManager.LoadSceneAsync
             (
-                sceneName,
+                sceneName.Split('/')[^1].Split('.')[0],
                 LoadSceneMode.Additive
-            ).Task;
+            );
+
+            asyncOperation.allowSceneActivation = true;
+            
+            while (asyncOperation.progress < 1)
+            {
+                await Task.Yield();
+            }
+
+            var scene = SceneManager.GetSceneByName(sceneName.Split('/')[^1].Split('.')[0]);
+            
+            return scene;
         }
 
 #if UNITY_EDITOR
@@ -62,23 +76,17 @@ namespace GameResources.ScenesManagement.Scripts
         {
             foreach (var sceneAsset in scenesAssets)
             {
-                var scene = OpenScene(sceneAsset.name);
+                var scene = OpenScene(sceneAsset.ScenePath);
 
                 _openedScenes.Add(scene);
             }
         }
 
-        private Scene OpenScene(string sceneName)
+        private static Scene OpenScene(string sceneName)
         {
-            var scenePath =
-                Application.dataPath
-                + folder
-                + sceneName
-                + ".unity";
-
             return EditorSceneManager.OpenScene
             (
-                scenePath,
+                sceneName,
                 OpenSceneMode.Additive
             );
         }
@@ -86,14 +94,18 @@ namespace GameResources.ScenesManagement.Scripts
         public void CloseAdditiveScenesInEditor()
         {
             if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            {
                 EditorSceneManager.SaveScenes(_openedScenes.ToArray());
+            }
 
             foreach (var scene in _openedScenes)
+            {
                 EditorSceneManager.CloseScene
                 (
                     scene,
                     true
                 );
+            }
         }
 
 #endif

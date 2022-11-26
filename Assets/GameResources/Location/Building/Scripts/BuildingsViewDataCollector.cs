@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
-using GameResources.Location.Building.Scripts;
-using UnityEditor;
 using UnityEngine;
 using Zenject;
 
-namespace GameResources.Location.Builder.Scripts
+#if UNITY_EDITOR
+
+using UnityEditor;
+
+#endif
+
+namespace GameResources.Location.Building.Scripts
 {
     [CreateAssetMenu(fileName = "BuildingsViewDataCollector", menuName = "Builder/BuildingsViewDataCollector")]
     public class BuildingsViewDataCollector : ScriptableObjectInstaller
@@ -13,8 +17,11 @@ namespace GameResources.Location.Builder.Scripts
         public event Action OnInited;
         
         public bool IsInited { get; private set; }
-        
-        public List<BuildingViewData> Buildings { get; private set; }
+
+        [SerializeField]
+        private List<BuildingViewData> buildings;
+
+        public IReadOnlyList<BuildingViewData> Buildings => buildings;
 
         public override void InstallBindings()
         {
@@ -24,24 +31,28 @@ namespace GameResources.Location.Builder.Scripts
             {
                 return;
             }
-            
-            GetBuildings();
 
             IsInited = true;
             OnInited?.Invoke();
         }
-        
-        private void GetBuildings()
+
+#if UNITY_EDITOR
+
+        public void GetBuildings()
         {
             var guids = AssetDatabase.FindAssets("t:"+ nameof(BuildingViewData));
 
-            Buildings = new List<BuildingViewData>(guids.Length);
+            buildings = new List<BuildingViewData>(guids.Length);
             
             foreach (var guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
-                Buildings.Add(AssetDatabase.LoadAssetAtPath<BuildingViewData>(path));
+                buildings.Add(AssetDatabase.LoadAssetAtPath<BuildingViewData>(path));
             }
+            
+            EditorUtility.SetDirty(this);
         }
+        
+#endif
     }
 }
