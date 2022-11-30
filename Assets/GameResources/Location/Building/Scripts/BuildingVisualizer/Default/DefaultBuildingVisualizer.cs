@@ -1,3 +1,4 @@
+using GameResources.Control.Scripts;
 using UnityEngine;
 
 namespace GameResources.Location.Building.Scripts.BuildingVisualizer.Default

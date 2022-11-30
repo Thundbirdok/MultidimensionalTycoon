@@ -2,13 +2,19 @@ using System.Collections.Generic;
 using System.Linq;
 using GameResources.Location.Island.Scripts;
 using UnityEngine;
+using Zenject;
 
 namespace GameResources.Location.Builder.Scripts
 {
     public class BuilderPositionChecker : MonoBehaviour
     {
-        [SerializeField]
-        private BuilderEventHandler builderEventHandler;
+        private BuilderEventHandler _builderEventHandler;
+
+        [Inject]
+        private void Construct(BuilderEventHandler builderEventHandler)
+        {
+            _builderEventHandler = builderEventHandler;
+        }
         
         public bool IsValidPosition
         (
@@ -25,7 +31,7 @@ namespace GameResources.Location.Builder.Scripts
 
             var isValid = cells.All(cell => cell.IsOccupied == false);
             
-            builderEventHandler.InvokeValidPosition(isValid);
+            _builderEventHandler.InvokeValidPosition(isValid);
 
             return isValid;
         }

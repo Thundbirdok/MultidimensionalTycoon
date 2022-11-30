@@ -3,6 +3,7 @@ using System.Linq;
 using GameResources.Location.Island.Scripts;
 using Lean.Touch;
 using UnityEngine;
+using Zenject;
 
 namespace GameResources.Location.Builder.Scripts
 {
@@ -44,14 +45,19 @@ namespace GameResources.Location.Builder.Scripts
         [SerializeField]
         private LeanFingerFilter use = new LeanFingerFilter(true);
 
-        [SerializeField]
-        private BuilderEventHandler builderEventHandler;
-        
         private const float MAX_RAYCAST_DISTANCE = 50;
         private const float MAX_SQR_MAGNITUDE = MAX_RAYCAST_DISTANCE * MAX_RAYCAST_DISTANCE;
         
         private readonly RaycastHit[] _hits = new RaycastHit[5];
 
+        private BuilderEventHandler _builderEventHandler;
+
+        [Inject]
+        private void Construct(BuilderEventHandler builderEventHandler)
+        {
+            _builderEventHandler = builderEventHandler;
+        }
+        
         private void Update() => GetPointedCell();
 
         private void GetPointedCell()
@@ -153,7 +159,7 @@ namespace GameResources.Location.Builder.Scripts
                 return;
             }
 
-            builderEventHandler.InvokeValidPosition(false);
+            _builderEventHandler.InvokeValidPosition(false);
             
             IsCellPointedNow = false;
             OnNoCellPointed?.Invoke();

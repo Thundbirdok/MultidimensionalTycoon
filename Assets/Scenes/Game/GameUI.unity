@@ -206,8 +206,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 399585904}
   m_HandleRect: {fileID: 399585903}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1564,7 +1564,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
   - {fileID: 11400000, guid: dd501e25f7e7628408170e52e59359d9, type: 2}
-  - {fileID: 11400000, guid: 7f33ac5b8620bd940904cbdb3e620e1f, type: 2}
+  - {fileID: 11400000, guid: f3f09ef34d353e6478f03d076e0993e4, type: 2}
   _monoInstallers:
   - {fileID: 1471579380}
   _installerPrefabs: []
@@ -1613,6 +1613,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scriptableObjects:
   - {fileID: 11400000, guid: c9eb5795f0c5bcb40bcdb52282bdc636, type: 2}
+  - {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
+  - {fileID: 11400000, guid: 86b74c81f6f2f2c4c87f7cf9086fd147, type: 2}
 --- !u!1 &1539373037
 GameObject:
   m_ObjectHideFlags: 0
@@ -1622,7 +1624,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1539373038}
-  - component: {fileID: 1539373039}
   - component: {fileID: 1539373042}
   - component: {fileID: 1539373041}
   - component: {fileID: 1539373043}
@@ -1657,18 +1658,6 @@ RectTransform:
   m_AnchoredPosition: {x: -400, y: 30}
   m_SizeDelta: {x: 400, y: 900}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1539373039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1539373037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d2a3211a3fa52e42a0ea2a6959e0901, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1539373041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1707,11 +1696,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77ae44a029696184d8bb1c1ed04d9c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  builderEventHandler: {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
   populateBuildingList:
-    buildingsPricesInitializer: {fileID: 1539373039}
     prefab: {fileID: 8544802834651173872, guid: 5210ee6741d244f49a78b71bab3542fe, type: 3}
     container: {fileID: 2109450491}
+    defaultListCapacity: 4
+    maxListSize: 8
 --- !u!114 &1539373043
 MonoBehaviour:
   m_ObjectHideFlags: 0

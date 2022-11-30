@@ -245,7 +245,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   builder: {fileID: 128189894}
-  builderEventHandler: {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
   positionChecker: {fileID: 128189897}
   cellPointer: {fileID: 128189896}
   cellsVisualizer:
@@ -272,7 +271,6 @@ MonoBehaviour:
     RequiredFingerCount: 0
     RequiredMouseButtons: 0
     RequiredSelectable: {fileID: 0}
-  builderEventHandler: {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
 --- !u!114 &128189897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,7 +283,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed60760aedd6b7d4d9e89c2be39c3d28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  builderEventHandler: {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
 --- !u!1 &569696354
 GameObject:
   m_ObjectHideFlags: 0
@@ -1841,6 +1838,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1471579379}
   - component: {fileID: 1471579378}
+  - component: {fileID: 1471579380}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -1862,7 +1860,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
   - {fileID: 11400000, guid: dd501e25f7e7628408170e52e59359d9, type: 2}
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 1471579380}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -1895,6 +1894,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1471579380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471579377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a446289064dce9f4283ca937327e0b0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scriptableObjects:
+  - {fileID: 11400000, guid: c9eb5795f0c5bcb40bcdb52282bdc636, type: 2}
+  - {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
 --- !u!1 &1528719167
 GameObject:
   m_ObjectHideFlags: 0

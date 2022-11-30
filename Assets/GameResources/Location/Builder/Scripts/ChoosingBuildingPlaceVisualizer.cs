@@ -1,7 +1,9 @@
+using GameResources.Control.Scripts;
 using GameResources.Location.Builder.CellVisualizer.Scripts;
 using GameResources.Location.Building.Scripts;
 using GameResources.Location.Building.Scripts.BuildingVisualizer;
 using UnityEngine;
+using Zenject;
 
 namespace GameResources.Location.Builder.Scripts
 {
@@ -9,10 +11,7 @@ namespace GameResources.Location.Builder.Scripts
     {
         [SerializeField]
         private Builder builder;
-        
-        [SerializeField]
-        private BuilderEventHandler builderEventHandler;
-        
+
         [SerializeField]
         private BuilderPositionChecker positionChecker;
         
@@ -34,6 +33,14 @@ namespace GameResources.Location.Builder.Scripts
 
         private GameObject _buildingPrefab;
 
+        private BuilderEventHandler _builderEventHandler;
+
+        [Inject]
+        private void Construct(BuilderEventHandler builderEventHandler)
+        {
+            _builderEventHandler = builderEventHandler;
+        }
+        
         private void OnEnable()
         {
             if (builder.IsBuilding)
@@ -54,8 +61,8 @@ namespace GameResources.Location.Builder.Scripts
 
         private void Subscribe()
         {
-            builderEventHandler.OnStartBuilding += StartVisualize;
-            builderEventHandler.OnStopBuilding += StopVisualize;
+            _builderEventHandler.OnStartBuilding += StartVisualize;
+            _builderEventHandler.OnStopBuilding += StopVisualize;
             
             cellPointer.OnCellPointed += OnCellPointed;
             cellPointer.OnNoCellPointed += OnNoCellPointed;
@@ -63,8 +70,8 @@ namespace GameResources.Location.Builder.Scripts
 
         private void Unsubscribe()
         {
-            builderEventHandler.OnStartBuilding -= StartVisualize;
-            builderEventHandler.OnStopBuilding -= StopVisualize;
+            _builderEventHandler.OnStartBuilding -= StartVisualize;
+            _builderEventHandler.OnStopBuilding -= StopVisualize;
             
             cellPointer.OnCellPointed -= OnCellPointed;
             cellPointer.OnNoCellPointed -= OnNoCellPointed;

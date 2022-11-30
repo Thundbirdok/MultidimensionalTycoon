@@ -1,5 +1,5 @@
+using GameResources.Control.Scripts;
 using GameResources.Location.Builder.Scripts;
-using GameResources.Location.Building.Scripts;
 using Lean.Gui;
 using UnityEngine;
 
