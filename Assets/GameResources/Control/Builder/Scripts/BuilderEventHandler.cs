@@ -1,10 +1,8 @@
 using System;
 using GameResources.Control.Scripts;
-using GameResources.Location.Building.Scripts;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
-namespace GameResources.Location.Builder.Scripts
+namespace GameResources.Control.Builder.Scripts
 {
     [CreateAssetMenu(fileName = "BuilderEventHandler", menuName = "Builder/BuilderEventHandler")]
     public class BuilderEventHandler : ScriptableObject
@@ -16,6 +14,11 @@ namespace GameResources.Location.Builder.Scripts
         public event Action OnAccept;
         public event Action OnCancel;
         public event Action<bool> OnValidPosition;
+        public event Action<BuildingSlot> OnBuild;
+        
+        public event Action OnAddPack;
+        public event Action OnRequestAddPack;
+        public event Action OnNoBuildings;
 
         public void InvokeStartBuilding(BuildingData building)
         {
@@ -37,5 +40,12 @@ namespace GameResources.Location.Builder.Scripts
         public void InvokeCancel() => OnCancel?.Invoke();
 
         public void InvokeValidPosition(bool isValid) => OnValidPosition?.Invoke(isValid);
+
+        public void InvokeBuild(BuildingSlot buildingSlot) => OnBuild?.Invoke(buildingSlot);
+
+        public void InvokeAddPack() => OnAddPack?.Invoke();
+        public void InvokeRequestAddPack() => OnRequestAddPack?.Invoke();
+        
+        public void InvokeNoBuildings() => OnNoBuildings?.Invoke();
     }
 }

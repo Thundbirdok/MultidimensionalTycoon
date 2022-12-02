@@ -281,6 +281,7 @@ MonoBehaviour:
   scriptableObjects:
   - {fileID: 11400000, guid: c9eb5795f0c5bcb40bcdb52282bdc636, type: 2}
   - {fileID: 11400000, guid: 86b74c81f6f2f2c4c87f7cf9086fd147, type: 2}
+  - {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
 --- !u!1 &1671240674
 GameObject:
   m_ObjectHideFlags: 0

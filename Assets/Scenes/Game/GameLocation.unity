@@ -230,7 +230,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellPointer: {fileID: 128189896}
-  eventHandler: {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
   positionChecker: {fileID: 128189897}
 --- !u!114 &128189895
 MonoBehaviour:
@@ -1909,6 +1908,7 @@ MonoBehaviour:
   scriptableObjects:
   - {fileID: 11400000, guid: c9eb5795f0c5bcb40bcdb52282bdc636, type: 2}
   - {fileID: 11400000, guid: 5560b37da6a6f9a479ac3eb6a7035387, type: 2}
+  - {fileID: 11400000, guid: 86b74c81f6f2f2c4c87f7cf9086fd147, type: 2}
 --- !u!1 &1528719167
 GameObject:
   m_ObjectHideFlags: 0

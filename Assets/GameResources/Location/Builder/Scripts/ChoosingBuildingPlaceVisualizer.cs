@@ -1,3 +1,4 @@
+using GameResources.Control.Builder.Scripts;
 using GameResources.Control.Scripts;
 using GameResources.Location.Builder.CellVisualizer.Scripts;
 using GameResources.Location.Building.Scripts;
@@ -63,9 +64,11 @@ namespace GameResources.Location.Builder.Scripts
         {
             _builderEventHandler.OnStartBuilding += StartVisualize;
             _builderEventHandler.OnStopBuilding += StopVisualize;
+
+            _builderEventHandler.OnBuild += PauseVisualize;
             
             cellPointer.OnCellPointed += OnCellPointed;
-            cellPointer.OnNoCellPointed += OnNoCellPointed;
+            cellPointer.OnNoCellPointed += PauseVisualize;
         }
 
         private void Unsubscribe()
@@ -73,8 +76,10 @@ namespace GameResources.Location.Builder.Scripts
             _builderEventHandler.OnStartBuilding -= StartVisualize;
             _builderEventHandler.OnStopBuilding -= StopVisualize;
             
+            _builderEventHandler.OnBuild -= PauseVisualize;
+            
             cellPointer.OnCellPointed -= OnCellPointed;
-            cellPointer.OnNoCellPointed -= OnNoCellPointed;
+            cellPointer.OnNoCellPointed -= PauseVisualize;
         }
 
         private async void StartVisualize(BuildingData building)
@@ -176,7 +181,9 @@ namespace GameResources.Location.Builder.Scripts
             _building.SetActive(true);
         }
 
-        private void OnNoCellPointed()
+        private void PauseVisualize(BuildingSlot _) => PauseVisualize();
+
+        private void PauseVisualize()
         {
             if (builder.IsBuilding == false)
             {

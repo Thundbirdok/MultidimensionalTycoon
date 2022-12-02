@@ -1,3 +1,4 @@
+using GameResources.Control.Builder.Scripts;
 using GameResources.Control.Scripts;
 using GameResources.Location.Builder.Scripts;
 using Lean.Gui;

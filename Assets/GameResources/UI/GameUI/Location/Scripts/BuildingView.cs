@@ -9,7 +9,30 @@ namespace GameResources.UI.GameUI.Location.Scripts
     public class BuildingView : MonoBehaviour
     {
         public event Action<BuildingViewData> OnButtonClick;
-        
+
+        public BuildingViewData Data { get; private set; }
+
+        private int _amount;
+        public int Amount
+        {
+            get
+            {
+                return _amount;
+            }
+
+            set
+            {
+                if (_amount == value)
+                {
+                    return;
+                }
+                
+                _amount = value;
+                
+                SetAmountText(_amount);
+            }
+        }
+
         [SerializeField]
         private Image image;
 
@@ -19,21 +42,25 @@ namespace GameResources.UI.GameUI.Location.Scripts
         [SerializeField]
         private LeanButton button;
 
-        private BuildingViewData _data;
-        
         private void OnEnable() => button.OnClick.AddListener(InvokeOnButtonClick);
 
         private void OnDisable() => button.OnClick.RemoveListener(InvokeOnButtonClick);
 
         public void Set(BuildingViewData data, int amount)
         {
-            _data = data;
+            Data = data;
+            Amount = amount;
             
-            image.sprite = _data.Icon;
+            image.sprite = Data.Icon;
 
+            SetAmountText(amount);
+        }
+
+        private void SetAmountText(int amount)
+        {
             amountText.text = amount.ToString();
         }
 
-        private void InvokeOnButtonClick() => OnButtonClick?.Invoke(_data);
+        private void InvokeOnButtonClick() => OnButtonClick?.Invoke(Data);
     }
 }

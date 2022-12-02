@@ -3,18 +3,29 @@ using Zenject;
 
 namespace GameResources.Control.Builder.Scripts
 {
-    public class BuildingsPacksController : MonoBehaviour
+    public class BuildingsPacksAdder : MonoBehaviour
     {
         private BuildingsPacksInitializer _buildingsPacksInitializer;
 
         private AvailableBuildings _availableBuildings;
+
+        private BuilderEventHandler _builderEventHandler;
         
         [Inject]
-        private void Construct(AvailableBuildings availableBuildings, BuildingsDataCollector buildingsDataCollector)
+        private void Construct
+        (
+            AvailableBuildings availableBuildings, 
+            BuilderEventHandler builderEventHandler, 
+            BuildingsDataCollector buildingsDataCollector
+        )
         {
             _availableBuildings = availableBuildings;
+            _builderEventHandler = builderEventHandler;
 
             _buildingsPacksInitializer = new BuildingsPacksInitializer(buildingsDataCollector);
+            
+            _builderEventHandler.OnNoBuildings += AddNewPack;
+            _builderEventHandler.OnRequestAddPack += AddNewPack;
             
             if (_buildingsPacksInitializer.IsInited)
             {
@@ -29,9 +40,11 @@ namespace GameResources.Control.Builder.Scripts
         private void OnDisable()
         {
             _buildingsPacksInitializer.OnInited -= AddNewPack;
+            _builderEventHandler.OnNoBuildings -= AddNewPack;
+            _builderEventHandler.OnRequestAddPack -= AddNewPack;
         }
 
-        private void AddNewPack()
+        public void AddNewPack()
         {
             _buildingsPacksInitializer.OnInited -= AddNewPack;
             

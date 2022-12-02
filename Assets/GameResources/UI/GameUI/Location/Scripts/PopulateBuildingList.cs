@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameResources.Control.Builder.Scripts;
-using GameResources.UI.LocationUI.Scripts;
+using GameResources.Control.Scripts;
+using GameResources.Location.Builder.Scripts;
 using UnityEngine;
 using UnityEngine.Pool;
 using Object = UnityEngine.Object;
@@ -30,31 +31,37 @@ namespace GameResources.UI.GameUI.Location.Scripts
         [SerializeField]
         private int maxListSize = 8;
         
-        private ObjectPool<BuildingView> _pool;
-
         private AvailableBuildings _availableBuildings;
 
         private BuildingsViewDataCollector _buildingsViewDataCollector;
 
+        private BuilderEventHandler _builderEventHandler;
+        
+        private ObjectPool<BuildingView> _pool;
+
         public void Construct
         (
-            AvailableBuildings availableBuildings, 
+            AvailableBuildings availableBuildings,
+            BuilderEventHandler builderEventHandler,
             BuildingsViewDataCollector buildingsViewDataCollector
         )
         {
             _availableBuildings = availableBuildings;
+            _builderEventHandler = builderEventHandler;
             _buildingsViewDataCollector = buildingsViewDataCollector;
 
             InitPool();
 
-            _availableBuildings.OnAddPack += Populate;
+            _builderEventHandler.OnAddPack += Populate;
+            _builderEventHandler.OnBuild += UpdateSlot;
             
             Populate();
         }
 
         ~PopulateBuildingList()
         {
-            _availableBuildings.OnAddPack -= Populate;
+            _builderEventHandler.OnAddPack -= Populate;
+            _builderEventHandler.OnBuild -= UpdateSlot;
         }
 
         private void InitPool()
@@ -86,19 +93,43 @@ namespace GameResources.UI.GameUI.Location.Scripts
             
             OnPopulate?.Invoke();
         }
+        
+        private void UpdateSlot(BuildingSlot slot)
+        {
+            foreach (var view in _buildingsViews)
+            {
+                if (view.Data.BuildingData != slot.Data)
+                {
+                    continue;
+                }
+
+                if (slot.Amount == 0)
+                {
+                    ClearBuildingView(view);
+                        
+                    return;
+                }
+                    
+                view.Amount = slot.Amount;
+                    
+                return;
+            }
+        }
 
         private void SetView(BuildingSlot slot, BuildingView view)
         {
             foreach (var viewData in _buildingsViewDataCollector.Views)
             {
-                if (viewData.BuildingData == slot.Data)
+                if (viewData.BuildingData != slot.Data)
                 {
-                    view.Set(viewData, slot.Amount);
-
-                    _buildingsViews.Add(view);
-                    
-                    return;
+                    continue;
                 }
+
+                view.Set(viewData, slot.Amount);
+
+                _buildingsViews.Add(view);
+                    
+                return;
             }
 
             Debug.LogError("Compared view and data not found");
@@ -114,6 +145,13 @@ namespace GameResources.UI.GameUI.Location.Scripts
             }
             
             _buildingsViews.Clear();
+        }
+
+        private void ClearBuildingView(BuildingView buildingView)
+        {
+            _pool.Release(buildingView);
+
+            _buildingsViews.Remove(buildingView);
         }
 
         private BuildingView CreateView() => Object.Instantiate(prefab, container);

@@ -31,7 +31,8 @@ namespace GameResources.UI.GameUI.Location.Scripts
             
             populateBuildingList.Construct
             (
-                availableBuildings, 
+                availableBuildings,
+                builderEventHandler,
                 buildingsViewDataCollector
             );
         }

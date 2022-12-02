@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using GameResources.Control.Builder.Scripts;
 using GameResources.Control.Scripts;
 using GameResources.Inputs;
-using GameResources.Location.Building.Scripts;
 using GameResources.Location.Island.Scripts;
 using UnityEngine;
+using Zenject;
 
 namespace GameResources.Location.Builder.Scripts
 {
@@ -29,13 +30,13 @@ namespace GameResources.Location.Builder.Scripts
                 if (_isBuilding)
                 {
                     InputStates.IsDragActive = false;
-                    eventHandler.InvokeStartBuilding(BuildingData);
+                    _eventHandler.InvokeStartBuilding(BuildingData);
                     
                     return;
                 }
                 
                 InputStates.IsDragActive = true;
-                eventHandler.InvokeStopBuilding();
+                _eventHandler.InvokeStopBuilding();
             }
         }
         
@@ -45,23 +46,30 @@ namespace GameResources.Location.Builder.Scripts
         private CellPointer cellPointer;
 
         [SerializeField]
-        private BuilderEventHandler eventHandler;
-
-        [SerializeField]
         private BuilderPositionChecker positionChecker;
+
+        private AvailableBuildings _availableBuildings;
+        private BuilderEventHandler _eventHandler;
+
+        [Inject]
+        private void Construct(AvailableBuildings availableBuildings, BuilderEventHandler eventHandler)
+        {
+            _availableBuildings = availableBuildings;
+            _eventHandler = eventHandler;
+        }
         
         private void OnEnable()
         {
-            eventHandler.OnChooseBuilding += OnChooseBuilding;
-            eventHandler.OnAccept += Build;
-            eventHandler.OnCancel += StopBuilding;
+            _eventHandler.OnChooseBuilding += OnChooseBuilding;
+            _eventHandler.OnAccept += Build;
+            _eventHandler.OnCancel += StopBuilding;
         }
 
         private void OnDisable()
         {
-            eventHandler.OnChooseBuilding -= OnChooseBuilding;
-            eventHandler.OnAccept -= Build;
-            eventHandler.OnCancel -= StopBuilding;
+            _eventHandler.OnChooseBuilding -= OnChooseBuilding;
+            _eventHandler.OnAccept -= Build;
+            _eventHandler.OnCancel -= StopBuilding;
         }
 
         private bool IsCanBuildHere(out IReadOnlyCollection<LocationCell> cells)
@@ -95,6 +103,13 @@ namespace GameResources.Location.Builder.Scripts
                 return;
             }
 
+            _availableBuildings.SpendBuilding(BuildingData, out var restAmount);
+
+            if (restAmount == 0)
+            {
+                IsBuilding = false;
+            }
+            
             var cell = cellPointer.PointedCell;
             var gridTransform = cellPointer.PointedGrid.transform;
 
@@ -121,8 +136,6 @@ namespace GameResources.Location.Builder.Scripts
                 .Task;
 
             OccupyCells(cells);
-            
-            IsBuilding = false;
         }
 
         private void StopBuilding() => IsBuilding = false;
