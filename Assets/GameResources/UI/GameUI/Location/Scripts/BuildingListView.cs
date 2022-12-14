@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using GameResources.Control.Builder.Scripts;
 using GameResources.Location.Builder.Scripts;
-using GameResources.UI.LocationUI.Scripts;
 using UnityEngine;
 using Zenject;
 
 namespace GameResources.UI.GameUI.Location.Scripts
 {
-    public class BuildingListView : MonoBehaviour
+    public sealed class BuildingListView : MonoBehaviour
     {
         [SerializeField]
         private PopulateBuildingList populateBuildingList;

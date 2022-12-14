@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace GameResources.Location.Island.Scripts
 {
+    using GameResources.Location.ResourceObjects.Scripts;
+
     public sealed class LocationGridProvider : MonoBehaviour
     {
         [SerializeField] 
@@ -12,6 +14,10 @@ namespace GameResources.Location.Island.Scripts
         [SerializeField]
         private List<Vector2Int> cellsPositions = new List<Vector2Int>();
 
+        [SerializeField]
+        private List<ResourceObjectPoint> points;
+        public List<ResourceObjectPoint> Points => points;
+        
         public LocationGrid Grid { get; private set; }
 
         private void OnEnable() => CreateGrid();

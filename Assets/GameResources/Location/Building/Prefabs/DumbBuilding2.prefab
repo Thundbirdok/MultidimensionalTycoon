@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5221515520383305099}
   - component: {fileID: 7651594251879573131}
+  - component: {fileID: 7108837035899596625}
   m_Layer: 0
   m_Name: DumbBuilding2
   m_TagString: Untagged
@@ -49,6 +50,19 @@ MonoBehaviour:
   available: {r: 0, g: 1, b: 0, a: 1}
   notAvailable: {r: 1, g: 0, b: 0, a: 1}
   <BuildingData>k__BackingField: {fileID: 11400000, guid: 2ef0b22f0c4d71d4ebee8d534628803d, type: 2}
+--- !u!114 &7108837035899596625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5221515520383305098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09d9c2f323f669248ab7ece54d244629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 2ef0b22f0c4d71d4ebee8d534628803d, type: 2}
 --- !u!1 &5851913401343716110
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,7 +74,6 @@ GameObject:
   - component: {fileID: 7179559466795215719}
   - component: {fileID: 3362097012673767275}
   - component: {fileID: 638986721910678886}
-  - component: {fileID: 6189239125122634969}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -133,17 +146,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &6189239125122634969
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5851913401343716110}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}

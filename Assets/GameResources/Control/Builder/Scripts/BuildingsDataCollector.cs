@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using GameResources.Control.Scripts;
+using GameResources.Control.Building.Scripts;
 using GameResources.Utility.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +9,7 @@ using Zenject;
 namespace GameResources.Control.Builder.Scripts
 {
     [CreateAssetMenu(fileName = "BuildingsDataCollector", menuName = "Builder/BuildingsDataCollector")]
-    public class BuildingsDataCollector : ScriptableObjectInstaller
+    public sealed class BuildingsDataCollector : ScriptableObjectInstaller
     {
         public event Action OnInited;
         

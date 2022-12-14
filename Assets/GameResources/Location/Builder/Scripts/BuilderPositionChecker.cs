@@ -7,7 +7,7 @@ using Zenject;
 
 namespace GameResources.Location.Builder.Scripts
 {
-    public class BuilderPositionChecker : MonoBehaviour
+    public sealed class BuilderPositionChecker : MonoBehaviour
     {
         private BuilderEventHandler _builderEventHandler;
 
@@ -19,13 +19,13 @@ namespace GameResources.Location.Builder.Scripts
         
         public bool IsValidPosition
         (
-            LocationCell pointedCell, 
+            Vector2Int pointedCellIndex, 
             LocationGrid pointedGrid, 
             int size, 
             out IReadOnlyCollection<LocationCell> cells
         )
         {
-            if (TryGetCells(pointedCell, pointedGrid, size, out cells) == false)
+            if (TryGetCells(pointedCellIndex, pointedGrid, size, out cells) == false)
             {
                 return false;
             }
@@ -39,7 +39,7 @@ namespace GameResources.Location.Builder.Scripts
         
         private static bool TryGetCells
         (
-            LocationCell pointedCell, 
+            Vector2Int pointedCellIndex, 
             LocationGrid pointedGrid, 
             int size, 
             out IReadOnlyCollection<LocationCell> cells
@@ -56,7 +56,7 @@ namespace GameResources.Location.Builder.Scripts
                 offset = (size - 1) / 2;
             }
             
-            var leftDown = pointedCell.Index - new Vector2Int(offset, offset);
+            var leftDown = pointedCellIndex - new Vector2Int(offset, offset);
 
             var foundCells = new List<LocationCell>();
 

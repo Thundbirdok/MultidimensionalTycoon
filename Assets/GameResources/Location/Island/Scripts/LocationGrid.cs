@@ -148,6 +148,10 @@ namespace GameResources.Location.Island.Scripts
         {
             index = Mathf.FloorToInt(point / CellSize);
 
+            var fraction = point - Mathf.Floor(point);
+
+            index = fraction < EPSILON && index > 0 ? index - 1 : index;
+
             return index >= 0 && index < maxIndex;
         }
     }

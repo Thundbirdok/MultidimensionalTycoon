@@ -1,12 +1,11 @@
 using GameResources.Control.Builder.Scripts;
-using GameResources.Control.Scripts;
 using UnityEditor;
 using UnityEngine;
 
 namespace GameResources.Control.Editor
 {
     [CustomEditor(typeof(BuildingsDataCollector))]
-    public class BuildingsDataCollectorInspector : UnityEditor.Editor
+    public sealed class BuildingsDataCollectorInspector : UnityEditor.Editor
     {
         private BuildingsDataCollector _collector;
         

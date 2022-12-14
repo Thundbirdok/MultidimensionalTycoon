@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace GameResources.UI.GameUI.Location.Scripts
 {
-    public class BuildingView : MonoBehaviour
+    public sealed class BuildingView : MonoBehaviour
     {
         public event Action<BuildingViewData> OnButtonClick;
 

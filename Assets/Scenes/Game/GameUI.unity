@@ -937,6 +937,60 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
+--- !u!1 &979259461
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 979259462}
+  - component: {fileID: 979259463}
+  m_Layer: 5
+  m_Name: InteractionValues
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &979259462
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979259461}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4145327411258458966}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &979259463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979259461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de2797e5d0a590468cdd7a3eebe7262, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  locationCamera: {fileID: 11400000, guid: 81e71d0fa68478e4a9f94455ae64cfea, type: 2}
+  viewPrefab: {fileID: 790985875882554169, guid: df4ed03978453cf40b50db7d8032b510, type: 3}
+  localRect: {fileID: 979259462}
+  container: {fileID: 979259462}
+  handler: {fileID: 11400000, guid: a3a07a47db169bb4cbd30ec6207f18d7, type: 2}
 --- !u!1 &1018512260
 GameObject:
   m_ObjectHideFlags: 0
@@ -3726,6 +3780,7 @@ RectTransform:
   - {fileID: 2444974774917921068}
   - {fileID: 1539373038}
   - {fileID: 3441014984949813563}
+  - {fileID: 979259462}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3824,7 +3879,7 @@ GameObject:
   - component: {fileID: 4145327411419168214}
   - component: {fileID: 4145327411419168201}
   m_Layer: 5
-  m_Name: Money
+  m_Name: Wood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3896,7 +3951,7 @@ GameObject:
   - component: {fileID: 4145327411950889854}
   - component: {fileID: 4145327411950889841}
   m_Layer: 5
-  m_Name: Gems
+  m_Name: Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

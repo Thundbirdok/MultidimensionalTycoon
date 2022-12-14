@@ -1,22 +1,35 @@
+using System.Collections.Generic;
+using System.Linq;
+using GameResources.Control.ResourceObjects.Scripts;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
-namespace GameResources.Control.Scripts
+namespace GameResources.Control.Building.Scripts
 {
     [CreateAssetMenu(fileName = "Building", menuName = "Building/BuildingData")]
-    public class BuildingData : ScriptableObject
+    public sealed class BuildingData : ResourceObjectData, IResourceObjectData
     {
         [SerializeField]
-        private string key;
-
-        public string Key => key;
+        private float interactionRadius;
+        public float InteractionRadius => interactionRadius;
         
+        [Tooltip("No zero-value interaction")]
         [SerializeField]
-        private AssetReference model;
-        public AssetReference Model => model;
+        private List<BuildingsInteractionValue> interactions = new List<BuildingsInteractionValue>();
+        
+        public new bool TryGetValue(IResourceObjectData data, out int value)
+        {
+            var interactionValue = interactions.FirstOrDefault(x => x.Data.Equals(data));
 
-        [SerializeField]
-        private int size = 1;
-        public int Size => size;
+            if (interactionValue == null)
+            {
+                value = 0;
+                
+                return false;
+            }
+
+            value = interactionValue.Value;
+            
+            return true;
+        }
     }
 }

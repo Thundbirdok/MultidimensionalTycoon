@@ -1,24 +1,18 @@
-using GameResources.Location.Building.Scripts.BuildingVisualizer.Default;
-using UnityEditor;
 using UnityEngine;
 
-namespace GameResources.Location.Editor
+namespace GameResources.Utility.Editor
 {
-    [CustomEditor(typeof(DefaultBuildingVisualizer))]
-    public class DefaultBuilderVisualizerInspector : UnityEditor.Editor
+    public sealed class CellSizeDrawer : MonoBehaviour
     {
-        [DrawGizmo(GizmoType.Active)]
-        private static void DrawCells(DefaultBuildingVisualizer builderVisualizer, GizmoType gizmoType)
+        public static void Draw(int size, Matrix4x4 localToWorldMatrix)
         {
-            var buildingData = builderVisualizer.BuildingData;
-
-            if (buildingData == null)
+            if (size <= 0)
             {
                 return;
             }
             
             var gizmoDefaultMatrix = Gizmos.matrix; 
-            Gizmos.matrix = builderVisualizer.transform.localToWorldMatrix;
+            Gizmos.matrix = localToWorldMatrix;
             
             var gizmoDefaultColor = Gizmos.color;
             Gizmos.color = Color.magenta;
@@ -27,14 +21,14 @@ namespace GameResources.Location.Editor
 
             int indexOffset;
 
-            if (buildingData.Size % 2 == 0)
+            if (size % 2 == 0)
             {
-                indexOffset = (buildingData.Size / 2) - 1;
+                indexOffset = (size / 2) - 1;
                 axisGridOffset = 0.5f;
             }
             else
             {
-                indexOffset = (buildingData.Size - 1) / 2;
+                indexOffset = (size - 1) / 2;
             }
             
             var gridOffset = new Vector3(axisGridOffset, 0, axisGridOffset);
@@ -43,9 +37,9 @@ namespace GameResources.Location.Editor
 
             var cellSize = new Vector3(1, 0, 1);
             
-            for (int i = 0; i < buildingData.Size; ++i)
+            for (int i = 0; i < size; ++i)
             {
-                for (int j = 0; j < buildingData.Size; ++j)
+                for (int j = 0; j < size; ++j)
                 {
                     var cellIndex = -leftDown + new Vector2Int(j, i);
 

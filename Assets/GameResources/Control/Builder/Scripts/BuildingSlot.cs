@@ -1,10 +1,10 @@
 using System;
-using GameResources.Control.Scripts;
+using GameResources.Control.Building.Scripts;
 
 namespace GameResources.Control.Builder.Scripts
 {
     [Serializable]
-    public class BuildingSlot
+    public sealed class BuildingSlot
     {
         public BuildingData Data;
         public int Amount;

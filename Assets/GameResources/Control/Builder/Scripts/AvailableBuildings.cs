@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameResources.Control.Scripts;
+using GameResources.Control.Building.Scripts;
 using UnityEngine;
 
 namespace GameResources.Control.Builder.Scripts
 {
     [CreateAssetMenu(fileName = "AvailableBuildings", menuName = "Builder/AvailableBuildings")]
-    public class AvailableBuildings : ScriptableObject
+    public sealed class AvailableBuildings : ScriptableObject
     {
         [SerializeField]
         private BuilderEventHandler builderEventHandler;

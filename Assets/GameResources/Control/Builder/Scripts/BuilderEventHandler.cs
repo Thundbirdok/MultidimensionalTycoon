@@ -1,11 +1,11 @@
 using System;
-using GameResources.Control.Scripts;
+using GameResources.Control.Building.Scripts;
 using UnityEngine;
 
 namespace GameResources.Control.Builder.Scripts
 {
     [CreateAssetMenu(fileName = "BuilderEventHandler", menuName = "Builder/BuilderEventHandler")]
-    public class BuilderEventHandler : ScriptableObject
+    public sealed class BuilderEventHandler : ScriptableObject
     {
         public event Action<BuildingData> OnStartBuilding;
         public event Action OnStopBuilding;

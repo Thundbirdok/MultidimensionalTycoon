@@ -1,14 +1,15 @@
+using System.Linq;
 using GameResources.Control.Builder.Scripts;
-using GameResources.Control.Scripts;
+using GameResources.Control.Building.Scripts;
 using GameResources.Location.Builder.CellVisualizer.Scripts;
 using GameResources.Location.Building.Scripts;
-using GameResources.Location.Building.Scripts.BuildingVisualizer;
+using GameResources.Location.Building.Scripts.Visualizer;
 using UnityEngine;
 using Zenject;
 
 namespace GameResources.Location.Builder.Scripts
 {
-    public class ChoosingBuildingPlaceVisualizer : MonoBehaviour
+    public sealed class ChoosingBuildingPlaceVisualizer : MonoBehaviour
     {
         [SerializeField]
         private Builder builder;
@@ -25,6 +26,14 @@ namespace GameResources.Location.Builder.Scripts
         [SerializeField]
         private float tweenDuration = 0.5f;
 
+        [SerializeField]
+        private GameObject checkSpherePrefab;
+        
+        [SerializeField]
+        private ObjectsInteractionsChecker checker;
+        
+        private GameObject _checkSphere;
+        
         private BuildingData _buildingData;
 
         private GameObject _building;
@@ -34,16 +43,28 @@ namespace GameResources.Location.Builder.Scripts
 
         private GameObject _buildingPrefab;
 
+        private BuildingVisualData _visualData;
+        
         private BuilderEventHandler _builderEventHandler;
 
+        private BuildingsVisualDataCollector _buildingsVisualDataCollector;
+        
         [Inject]
-        private void Construct(BuilderEventHandler builderEventHandler)
+        private void Construct
+        (
+            BuilderEventHandler builderEventHandler, 
+            BuildingsVisualDataCollector buildingsVisualDataCollector
+        )
         {
             _builderEventHandler = builderEventHandler;
+            _buildingsVisualDataCollector = buildingsVisualDataCollector;
         }
         
         private void OnEnable()
         {
+            _checkSphere = Instantiate(checkSpherePrefab, transform);
+            _checkSphere.SetActive(false);
+            
             if (builder.IsBuilding)
             {
                 StartVisualize(builder.BuildingData);
@@ -67,7 +88,7 @@ namespace GameResources.Location.Builder.Scripts
 
             _builderEventHandler.OnBuild += PauseVisualize;
             
-            cellPointer.OnCellPointed += OnCellPointed;
+            cellPointer.OnCellPointed += SetBuildingPosition;
             cellPointer.OnNoCellPointed += PauseVisualize;
         }
 
@@ -78,20 +99,34 @@ namespace GameResources.Location.Builder.Scripts
             
             _builderEventHandler.OnBuild -= PauseVisualize;
             
-            cellPointer.OnCellPointed -= OnCellPointed;
+            cellPointer.OnCellPointed -= SetBuildingPosition;
             cellPointer.OnNoCellPointed -= PauseVisualize;
         }
 
         private async void StartVisualize(BuildingData building)
         {
+            StopVisualize();
+            
             _buildingData = building;
 
-            _buildingPrefab = await _buildingData.Model.LoadAssetAsync<GameObject>().Task;
+            _visualData = _buildingsVisualDataCollector.Visuals
+                .FirstOrDefault(x => x.Data == _buildingData);
+
+            if (_visualData == null)
+            {
+                return;
+            }
+            
+            _buildingPrefab = await _visualData.Visual.LoadAssetAsync<GameObject>().Task;
             
             _building = Instantiate(_buildingPrefab, transform);
-            
+
             _building.SetActive(false);
-            
+
+            _checkSphere.transform.localScale = building.InteractionRadius * 2 * Vector3.one;
+            _checkSphere.transform.SetParent(_building.transform);
+            _checkSphere.transform.localPosition = Vector3.zero;
+
             SetBuildingVisualizerComponent();
 
             _tweener = new Tweener(this, _building, tweenDuration);
@@ -118,8 +153,17 @@ namespace GameResources.Location.Builder.Scripts
                 return;
             }
 
+            checker.ClearInteractions();
+            _checkSphere.transform.SetParent(transform);
+            _checkSphere.SetActive(false);
+            
             _building.SetActive(false);
-            _buildingData.Model.ReleaseAsset();
+
+            if (_visualData != null)
+            {
+                _visualData.Visual.ReleaseAsset();
+            }
+
             _buildingPrefab = null;
             
             cellsVisualizer.FadeOutCurrentCells();
@@ -130,7 +174,7 @@ namespace GameResources.Location.Builder.Scripts
             _buildingVisualiser = null;
         }
         
-        private void OnCellPointed()
+        private void SetBuildingPosition()
         {
             if (builder.IsBuilding == false)
             {
@@ -168,7 +212,7 @@ namespace GameResources.Location.Builder.Scripts
             var isValidPosition = positionChecker
                 .IsValidPosition
                 (
-                    cellPointer.PointedCell,
+                    cellPointer.PointedCell.Index,
                     cellPointer.PointedGrid.Grid,
                     _buildingData.Size,
                     out var cells
@@ -177,7 +221,10 @@ namespace GameResources.Location.Builder.Scripts
             _buildingVisualiser.SetIsAvailableToBuild(isValidPosition);
 
             cellsVisualizer.VisualizeCells(cells, gridTransform);
-            
+
+            checker.CheckBuildingsInSphere(position, _buildingData);
+
+            _checkSphere.SetActive(true);
             _building.SetActive(true);
         }
 
@@ -200,9 +247,11 @@ namespace GameResources.Location.Builder.Scripts
                 return;
             }
             
+            checker.ClearInteractions();
             cellsVisualizer.FadeOutCurrentCells();
 
             _building.SetActive(false);
+            _checkSphere.SetActive(false);
         }
     }
 }

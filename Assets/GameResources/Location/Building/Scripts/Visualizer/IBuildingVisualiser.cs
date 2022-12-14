@@ -1,4 +1,4 @@
-namespace GameResources.Location.Building.Scripts.BuildingVisualizer
+namespace GameResources.Location.Building.Scripts.Visualizer
 {
     public interface IBuildingVisualiser
     {

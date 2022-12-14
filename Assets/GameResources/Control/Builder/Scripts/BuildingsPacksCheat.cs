@@ -4,7 +4,7 @@ using Zenject;
 
 namespace GameResources.Control.Builder.Scripts
 {
-    public class BuildingsPacksCheat : MonoBehaviour
+    public sealed class BuildingsPacksCheat : MonoBehaviour
     {
         [SerializeField]
         private Button add;

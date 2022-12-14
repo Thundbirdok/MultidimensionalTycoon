@@ -1,12 +1,11 @@
 using GameResources.Control.Builder.Scripts;
-using GameResources.Control.Scripts;
-using GameResources.Location.Builder.Scripts;
+using GameResources.Control.Building.Scripts;
 using Lean.Gui;
 using UnityEngine;
 
 namespace GameResources.UI.Scripts
 {
-    public class DragSnapWindowPosition : MonoBehaviour
+    public sealed class DragSnapWindowPosition : MonoBehaviour
     {
         [SerializeField]
         private RectTransform window;

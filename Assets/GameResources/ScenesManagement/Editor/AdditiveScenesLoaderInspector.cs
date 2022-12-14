@@ -1,8 +1,9 @@
-using UnityEditor;
-using UnityEngine;
-
-namespace GameResources.ScenesManagement.Scripts.Editor
+namespace GameResources.ScenesManagement.Editor
 {
+    using GameResources.ScenesManagement.Scripts;
+    using UnityEditor;
+    using UnityEngine;
+
     [CustomEditor(typeof(AdditiveScenesLoader))]
     public sealed class AdditiveScenesLoaderInspector : UnityEditor.Editor
     {

@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameResources.Control.Builder.Scripts;
-using GameResources.Control.Scripts;
-using GameResources.Location.Builder.Scripts;
 using UnityEngine;
 using UnityEngine.Pool;
 using Object = UnityEngine.Object;
@@ -11,7 +9,7 @@ using Object = UnityEngine.Object;
 namespace GameResources.UI.GameUI.Location.Scripts
 {
     [Serializable]
-    public class PopulateBuildingList
+    public sealed class PopulateBuildingList
     {
         public event Action OnPopulate;
         public event Action OnBeforeClear;
@@ -132,7 +130,7 @@ namespace GameResources.UI.GameUI.Location.Scripts
                 return;
             }
 
-            Debug.LogError("Compared view and data not found");
+            Debug.LogError("Compared view and Data not found");
         }
 
         private void Clear()

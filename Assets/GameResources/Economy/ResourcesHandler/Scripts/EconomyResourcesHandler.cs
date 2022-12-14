@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GameResources.Economy.Resources.Scripts;
 using GameResources.Economy.Resources.Scripts.Stone;
 using GameResources.Economy.Resources.Scripts.Wood;
@@ -19,7 +21,11 @@ namespace GameResources.Economy.ResourcesHandler.Scripts
         private static string JsonPath
             => Application.persistentDataPath + FILE_NAME;
 
+        [NonSerialized]
         private JObject _jObject;
+
+        [NonSerialized]
+        private readonly List<IResourceHandler> _handlers = new List<IResourceHandler>();
         
         public override void InstallBindings()
         {
@@ -42,27 +48,43 @@ namespace GameResources.Economy.ResourcesHandler.Scripts
             var saveJObject = CollectResourcesToJObject();
 
             using var file = File.CreateText(JsonPath);
-            using JsonTextWriter writer = new(file);
+            using var writer = new JsonTextWriter(file);
             saveJObject.WriteTo(writer);
         }
         
         private void BindHandler(Type type)
         {
-            var handler = (IResourceHandler)Activator.CreateInstance(type);
-            handler.ChangeWithoutNotify(GetValue(handler.Key));
-
+            var handler = GetHandler(type);
+            
             Container
                 .BindInterfacesAndSelfTo(type)
                 .FromInstance(handler)
                 .AsSingle();
         }
 
+        private IResourceHandler GetHandler(Type type)
+        {
+            var handler = _handlers.FirstOrDefault(x => x.GetType() == type);
+
+            if (handler != null)
+            {
+                return handler;
+            }
+
+            handler = (IResourceHandler)Activator.CreateInstance(type);
+            handler.ChangeWithoutNotify(GetValue(handler.Key));
+                
+            _handlers.Add(handler);
+
+            return handler;
+        }
+        
         private void GetJObject()
         {
             try
             {
                 using var file = File.OpenText(JsonPath);
-                using JsonTextReader reader = new(file);
+                using var reader = new JsonTextReader(file);
 
                 _jObject = (JObject)JToken.ReadFrom(reader);
             }

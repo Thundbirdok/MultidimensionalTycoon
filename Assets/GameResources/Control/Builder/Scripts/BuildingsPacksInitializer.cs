@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GameResources.Control.Builder.Scripts
 {
-    public class BuildingsPacksInitializer
+    public sealed class BuildingsPacksInitializer
     {
         public event Action OnInited;
         
@@ -88,15 +88,27 @@ namespace GameResources.Control.Builder.Scripts
             
             foreach (var building in _buildingsDataCollector.Buildings)
             {
-                var buildingToken = packToken.SelectToken(building.Key);
-
-                if (buildingToken == null)
+                try
                 {
-                    continue;
+                    var buildingToken = packToken.SelectToken(building.Key);
+
+                    if (buildingToken == null)
+                    {
+                        continue;
+                    }
+
+                    if (int.TryParse(buildingToken.ToString(), out var value) == false)
+                    {
+                        continue;
+                    }
+                    
+                    var pair = new BuildingSlot(building, value);
+                    pack.Slots.Add(pair);
                 }
-                
-                var pair = new BuildingSlot(building, buildingToken.Value<int>());
-                pack.Slots.Add(pair);
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
             }
 
             return pack;

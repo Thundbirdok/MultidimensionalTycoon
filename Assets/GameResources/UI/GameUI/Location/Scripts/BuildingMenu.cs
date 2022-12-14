@@ -1,12 +1,11 @@
-using DG.Tweening;
-using GameResources.Control.Builder.Scripts;
-using GameResources.Control.Scripts;
-using GameResources.Location.Builder.Scripts;
-using Lean.Gui;
-using UnityEngine;
-
-namespace GameResources.UI.LocationUI.Scripts
+namespace GameResources.UI.GameUI.Location.Scripts
 {
+    using DG.Tweening;
+    using GameResources.Control.Builder.Scripts;
+    using GameResources.Control.Building.Scripts;
+    using Lean.Gui;
+    using UnityEngine;
+
     public class BuildingMenu : MonoBehaviour
     {
         [SerializeField]

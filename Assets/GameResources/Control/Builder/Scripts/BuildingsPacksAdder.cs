@@ -3,7 +3,9 @@ using Zenject;
 
 namespace GameResources.Control.Builder.Scripts
 {
-    public class BuildingsPacksAdder : MonoBehaviour
+    using System;
+
+    public sealed class BuildingsPacksAdder : MonoBehaviour
     {
         private BuildingsPacksInitializer _buildingsPacksInitializer;
 
@@ -42,6 +44,11 @@ namespace GameResources.Control.Builder.Scripts
             _buildingsPacksInitializer.OnInited -= AddNewPack;
             _builderEventHandler.OnNoBuildings -= AddNewPack;
             _builderEventHandler.OnRequestAddPack -= AddNewPack;
+        }
+
+        private void OnDestroy()
+        {
+            _buildingsPacksInitializer = null;
         }
 
         public void AddNewPack()
