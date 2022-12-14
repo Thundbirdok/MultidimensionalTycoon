@@ -11,7 +11,7 @@ namespace GameResources.Economy.Resources.Scripts.Wood
         
         public int Value => _handler.Value;
 
-        public string Key => "Money";
+        public string Key => "Wood";
 
         private IntValueHandler _handler;
 

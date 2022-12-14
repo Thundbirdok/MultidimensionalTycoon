@@ -10,7 +10,7 @@ namespace GameResources.Economy.Resources.Scripts.Stone
         public int Value => _handler.Value;
 
         public Type ResourceType => typeof(Stone);
-        public string Key => "Gems";
+        public string Key => "Stone";
 
         private IntValueHandler _handler;
 
