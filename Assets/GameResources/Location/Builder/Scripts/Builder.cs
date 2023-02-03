@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GameResources.Control.Builder.Scripts;
 using GameResources.Control.Building.Scripts;
 using GameResources.Economy.Resources.Scripts.Wood;
+using GameResources.Economy.Resources.Wood;
 using GameResources.Inputs;
 using GameResources.Location.Building.Scripts;
 using GameResources.Location.Island.Scripts;

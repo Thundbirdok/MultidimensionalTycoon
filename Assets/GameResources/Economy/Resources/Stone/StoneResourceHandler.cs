@@ -1,10 +1,11 @@
 using System;
+using GameResources.Economy.Resources.Scripts;
 
-namespace GameResources.Economy.Resources.Scripts.Stone
+namespace GameResources.Economy.Resources.Stone
 {
     public sealed class StoneResourceHandler : IResourceHandler
     {
-        public event Action OnChangeValue;
+        public event Action OnValueChanged;
         public event Action OnNotEnough;
 
         public int Value => _handler.Value;
@@ -36,7 +37,7 @@ namespace GameResources.Economy.Resources.Scripts.Stone
 
         public void ChangeWithoutNotify(int value) => _handler.ChangeWithoutNotify(value);
 
-        private void OnChangeValueInvoke() => OnChangeValue?.Invoke();
+        private void OnChangeValueInvoke() => OnValueChanged?.Invoke();
 
         private void OnNotEnoughInvoke() => OnNotEnough?.Invoke();
     }

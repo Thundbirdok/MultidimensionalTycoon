@@ -3,9 +3,9 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace GameResources.Economy.Resources.Scripts.Wood
+namespace GameResources.Economy.Resources.Stone
 {
-    public sealed class WoodView : MonoBehaviour
+    public sealed class StoneView : MonoBehaviour
     {
         [SerializeField]
         private TextMeshProUGUI resourceName;
@@ -13,19 +13,19 @@ namespace GameResources.Economy.Resources.Scripts.Wood
         [SerializeField]
         private TextMeshProUGUI value;
 
-        private WoodResourceHandler _handler;
+        private StoneResourceHandler _handler;
 
         private bool _isSubscribed;
         private bool _isRed;
 
         [Inject]
-        private void Construct(WoodResourceHandler woodHandler)
+        private void Construct(StoneResourceHandler stoneHandler)
         {
-            _handler = woodHandler;
+            _handler = stoneHandler;
 
             Subscribe();
 
-            ShowValue();
+            ShowValueChanged();
 
             gameObject.SetActive(true);
         }
@@ -41,7 +41,7 @@ namespace GameResources.Economy.Resources.Scripts.Wood
 
             Subscribe();
 
-            ShowValue();
+            ShowValueChanged();
         }
 
         private void OnDisable() => Unsubscribe();
@@ -53,7 +53,7 @@ namespace GameResources.Economy.Resources.Scripts.Wood
                 return;
             }
 
-            _handler.OnChangeValue += ShowValue;
+            _handler.OnValueChanged += ShowValueChanged;
             _handler.OnNotEnough += TurnRed;
 
             _isSubscribed = true;
@@ -63,14 +63,14 @@ namespace GameResources.Economy.Resources.Scripts.Wood
         {
             if (_handler != null)
             {
-                _handler.OnChangeValue -= ShowValue;
+                _handler.OnValueChanged -= ShowValueChanged;
                 _handler.OnNotEnough -= TurnRed;
             }
 
             _isSubscribed = false;
         }
 
-        private void ShowValue()
+        private void ShowValueChanged()
         {
             value.text = _handler.Value.ToString();
         }

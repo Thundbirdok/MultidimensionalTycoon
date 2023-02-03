@@ -3,9 +3,9 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace GameResources.Economy.Resources.Scripts.Stone
+namespace GameResources.Economy.Resources.Wood
 {
-    public sealed class StoneView : MonoBehaviour
+    public sealed class WoodView : MonoBehaviour
     {
         [SerializeField]
         private TextMeshProUGUI resourceName;
@@ -13,15 +13,15 @@ namespace GameResources.Economy.Resources.Scripts.Stone
         [SerializeField]
         private TextMeshProUGUI value;
 
-        private StoneResourceHandler _handler;
+        private WoodResourceHandler _handler;
 
         private bool _isSubscribed;
         private bool _isRed;
 
         [Inject]
-        private void Construct(StoneResourceHandler stoneHandler)
+        private void Construct(WoodResourceHandler woodHandler)
         {
-            _handler = stoneHandler;
+            _handler = woodHandler;
 
             Subscribe();
 
@@ -53,7 +53,7 @@ namespace GameResources.Economy.Resources.Scripts.Stone
                 return;
             }
 
-            _handler.OnChangeValue += ShowValue;
+            _handler.OnValueChanged += ShowValue;
             _handler.OnNotEnough += TurnRed;
 
             _isSubscribed = true;
@@ -63,7 +63,7 @@ namespace GameResources.Economy.Resources.Scripts.Stone
         {
             if (_handler != null)
             {
-                _handler.OnChangeValue -= ShowValue;
+                _handler.OnValueChanged -= ShowValue;
                 _handler.OnNotEnough -= TurnRed;
             }
 

@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace GameResources.Economy.Resources.Scripts.Wood
+namespace GameResources.Economy.Resources.Stone
 {
-    public sealed class WoodCheat : MonoBehaviour
+    public sealed class StoneCheat : MonoBehaviour
     {
         [SerializeField]
         private Button add;
@@ -12,12 +12,12 @@ namespace GameResources.Economy.Resources.Scripts.Wood
         [SerializeField]
         private Button spend;
 
-        private WoodResourceHandler _handler;
+        private StoneResourceHandler _handler;
 
         [Inject]
-        private void Construct(WoodResourceHandler resourceHandler)
+        private void Construct(StoneResourceHandler stoneHandler)
         {
-            _handler = resourceHandler;
+            _handler = stoneHandler;
 
             add.onClick.AddListener(Add);
             spend.onClick.AddListener(Spend);

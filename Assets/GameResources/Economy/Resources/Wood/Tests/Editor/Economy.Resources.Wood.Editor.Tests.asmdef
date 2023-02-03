@@ -1,0 +1,22 @@
+{
+    "name": "Economy.Resources.Wood.Editor.Tests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c66f0393f57522b4ab0a42eec0397240",
+        "GUID:e372c541aba5148868e12aa078ca7c20"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "NSubstitute.dll",
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

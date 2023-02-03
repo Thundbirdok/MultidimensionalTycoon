@@ -4,7 +4,7 @@ namespace GameResources.Economy.Resources.Scripts
 {
     public interface IResourceHandler
     {
-        public event Action OnChangeValue;
+        public event Action OnValueChanged;
         public event Action OnNotEnough;
 
         public Type ResourceType { get; }

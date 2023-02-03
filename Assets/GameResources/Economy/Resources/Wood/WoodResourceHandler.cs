@@ -1,13 +1,14 @@
 using System;
+using GameResources.Economy.Resources.Scripts;
 
-namespace GameResources.Economy.Resources.Scripts.Wood
+namespace GameResources.Economy.Resources.Wood
 {
     public sealed class WoodResourceHandler : IResourceHandler
     {
-        public event Action OnChangeValue;
+        public event Action OnValueChanged;
         public event Action OnNotEnough;
 
-        public Type ResourceType => typeof(Wood);
+        public Type ResourceType => typeof(Scripts.Wood.Wood);
         
         public int Value => _handler.Value;
 
@@ -37,7 +38,7 @@ namespace GameResources.Economy.Resources.Scripts.Wood
 
         public void ChangeWithoutNotify(int value) => _handler.ChangeWithoutNotify(value);
 
-        private void OnChangeValueInvoke() => OnChangeValue?.Invoke();
+        private void OnChangeValueInvoke() => OnValueChanged?.Invoke();
 
         private void OnNotEnoughInvoke() => OnNotEnough?.Invoke();
     }
