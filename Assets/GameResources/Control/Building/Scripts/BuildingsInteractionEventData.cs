@@ -1,4 +1,5 @@
 using System;
+using GameResources.Control.Economy.Resources.Scripts;
 using UnityEngine;
 
 namespace GameResources.Control.Building.Scripts
@@ -6,9 +7,9 @@ namespace GameResources.Control.Building.Scripts
     public sealed class BuildingsInteractionEventData: IEquatable<BuildingsInteractionEventData>
     {
         public readonly Vector3 Position;
-        public readonly int Value;
+        public readonly ResourcesList Value;
 
-        public BuildingsInteractionEventData(Vector3 position, int value)
+        public BuildingsInteractionEventData(Vector3 position, ResourcesList value)
         {
             Position = position;
             Value = value;

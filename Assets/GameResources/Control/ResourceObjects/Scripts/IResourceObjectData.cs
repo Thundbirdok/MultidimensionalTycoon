@@ -1,3 +1,5 @@
+using GameResources.Control.Economy.Resources.Scripts;
+
 namespace GameResources.Control.ResourceObjects.Scripts
 {
     public interface IResourceObjectData
@@ -6,6 +8,6 @@ namespace GameResources.Control.ResourceObjects.Scripts
 
         public int Size { get; }
 
-        public bool TryGetValue(IResourceObjectData data, out int value);
+        public bool TryGetValue(IResourceObjectData data, out Resource value);
     }
 }

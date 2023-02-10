@@ -17,6 +17,10 @@ MonoBehaviour:
   interactionRadius: 6
   interactions:
   - <Data>k__BackingField: {fileID: 11400000, guid: 51e759abf4dcfc0478165d30e9133706, type: 2}
-    <Value>k__BackingField: 10
+    <Value>k__BackingField:
+      <Value>k__BackingField: 10
+      <Key>k__BackingField: wood
   - <Data>k__BackingField: {fileID: 11400000}
-    <Value>k__BackingField: -50
+    <Value>k__BackingField:
+      <Value>k__BackingField: -10
+      <Key>k__BackingField: wood

@@ -3,8 +3,6 @@ using Zenject;
 
 namespace GameResources.Control.Builder.Scripts
 {
-    using System;
-
     public sealed class BuildingsPacksAdder : MonoBehaviour
     {
         private BuildingsPacksInitializer _buildingsPacksInitializer;

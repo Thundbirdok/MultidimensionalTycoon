@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameResources.Control.Builder.Scripts;
 using GameResources.Control.Building.Scripts;
-using GameResources.Economy.Resources.Scripts.Wood;
-using GameResources.Economy.Resources.Wood;
+using GameResources.Control.Economy.Resources.Scripts;
+using GameResources.Control.Economy.ResourcesHandler.Scripts;
 using GameResources.Inputs;
 using GameResources.Location.Building.Scripts;
 using GameResources.Location.Island.Scripts;
@@ -66,7 +66,7 @@ namespace GameResources.Location.Builder.Scripts
         
         private BuildingVisualData _visualData;
 
-        private WoodResourceHandler _woodResourceHandler;
+        private EconomyResourcesHandler _economyResourceHandler;
         
         [Inject]
         private void Construct
@@ -75,7 +75,7 @@ namespace GameResources.Location.Builder.Scripts
             BuilderEventHandler eventHandler,
             BuildingsInteractedValuesHandler buildingsInteractedValuesHandler,
             BuildingsVisualDataCollector buildingsVisualDataCollector,
-            WoodResourceHandler woodResourceHandler
+            EconomyResourcesHandler economyResourcesHandler
         )
         {
             _availableBuildings = availableBuildings;
@@ -84,7 +84,7 @@ namespace GameResources.Location.Builder.Scripts
 
             _buildingsVisualDataCollector = buildingsVisualDataCollector;
             
-            _woodResourceHandler = woodResourceHandler;
+            _economyResourceHandler = economyResourcesHandler;
         }
         
         private void OnEnable()
@@ -169,9 +169,22 @@ namespace GameResources.Location.Builder.Scripts
 
         private void AddValues()
         {
-            foreach (var eventData in _buildingsInteractedValuesHandler.EventsData)
+            var resources =
+                _buildingsInteractedValuesHandler.EventsData.SelectMany(eventData => eventData.Value.Resources.Values);
+
+            var resourcesList = new ResourcesList();
+
+            foreach (var resource in resources)
             {
-                _woodResourceHandler.Add(eventData.Value);
+                resourcesList.Add(resource);
+            }
+            
+            foreach (var resource in resourcesList.Resources)
+            {
+                if (_economyResourceHandler.TryGetHandler(resource.Key, out var handler))
+                {
+                    handler.Add(resource.Value.Value);
+                }
             }
         }
 

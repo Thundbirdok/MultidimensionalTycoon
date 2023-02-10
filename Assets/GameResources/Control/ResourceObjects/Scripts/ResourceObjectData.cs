@@ -1,3 +1,4 @@
+using GameResources.Control.Economy.Resources.Scripts;
 using UnityEngine;
 
 namespace GameResources.Control.ResourceObjects.Scripts
@@ -14,9 +15,9 @@ namespace GameResources.Control.ResourceObjects.Scripts
         private int size = 1;
         public int Size => size;
         
-        public bool TryGetValue(IResourceObjectData data, out int value)
+        public bool TryGetValue(IResourceObjectData data, out Resource value)
         {
-            value = 0;
+            value = null;
 
             return false;
         }

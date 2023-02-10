@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GameResources.Control.Building.Scripts;
+using GameResources.Control.Economy.ResourcesHandler.Scripts;
 using GameResources.Utility.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -17,12 +18,22 @@ namespace GameResources.Control.Builder.Scripts
 
         [SerializeField]
         private List<BuildingData> buildings = new List<BuildingData>();
-
         public IReadOnlyList<BuildingData> Buildings => buildings;
 
         public override void InstallBindings()
         {
             Container.Bind<BuildingsDataCollector>().FromInstance(this);
+        }
+
+        [Inject]
+        private void Construct(EconomyResourcesHandler economyResourcesHandler)
+        {
+            economyResourcesHandler;
+
+            foreach (var building in buildings)
+            {
+                building.Interactions[0].
+            }
             
             if (IsInited)
             {
@@ -32,7 +43,7 @@ namespace GameResources.Control.Builder.Scripts
             IsInited = true;
             OnInited?.Invoke();
         }
-
+        
 #if UNITY_EDITOR
 
         public void GetBuildings()

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using GameResources.Control.Economy.Resources.Scripts;
 using GameResources.Control.ResourceObjects.Scripts;
 using UnityEngine;
 
@@ -12,17 +13,16 @@ namespace GameResources.Control.Building.Scripts
         private float interactionRadius;
         public float InteractionRadius => interactionRadius;
         
-        [Tooltip("No zero-value interaction")]
-        [SerializeField]
-        private List<BuildingsInteractionValue> interactions = new List<BuildingsInteractionValue>();
-        
-        public new bool TryGetValue(IResourceObjectData data, out int value)
+        private List<BuildingsInteractionValue> _interactions = new List<BuildingsInteractionValue>();
+        public IReadOnlyList<BuildingsInteractionValue> Interactions => _interactions;
+
+        public bool TryGetValue(IResourceObjectData data, out Resource value)
         {
-            var interactionValue = interactions.FirstOrDefault(x => x.Data.Equals(data));
+            var interactionValue = _interactions.FirstOrDefault(x => x.Data.Equals(data));
 
             if (interactionValue == null)
             {
-                value = 0;
+                value = null;
                 
                 return false;
             }
@@ -30,6 +30,11 @@ namespace GameResources.Control.Building.Scripts
             value = interactionValue.Value;
             
             return true;
+        }
+
+        public void SetInteractions(List<BuildingsInteractionValue> interactions)
+        {
+            _interactions = interactions;
         }
     }
 }

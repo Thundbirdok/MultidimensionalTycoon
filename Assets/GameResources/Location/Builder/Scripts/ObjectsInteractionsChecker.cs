@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using GameResources.Control.Builder.Scripts;
 using GameResources.Control.Building.Scripts;
+using GameResources.Control.Economy.Resources.Scripts;
+using GameResources.Control.ResourceObjects.Scripts;
 using GameResources.Location.ResourcesInteraction.Scripts;
 using UnityEngine;
 
@@ -32,7 +34,7 @@ namespace GameResources.Location.Builder.Scripts
 
         private void SetInteractionValuesPositions
         (
-            BuildingData buildingData, 
+            IResourceObjectData buildingData, 
             IEnumerable<IGiveResources> resourcesInRadius
         )
         {
@@ -40,32 +42,47 @@ namespace GameResources.Location.Builder.Scripts
             
             foreach (var resourceObject in resourcesInRadius)
             {
-                var isInteraction = false;
-                
-                if (buildingData.TryGetValue(resourceObject.ResourceObjectData, out var valueA))
-                {
-                    isInteraction = true;
-                }
-
-                if (resourceObject.ResourceObjectData.TryGetValue(buildingData, out var valueB))
-                {
-                    isInteraction = true;
-                }
-
-                if (isInteraction == false)
-                {
-                    continue;
-                }
-                
-                var eventData = new BuildingsInteractionEventData(resourceObject.Position, valueA + valueB);
-
-                interactionValuePositions
-                    .Add(eventData);
+                AddInteractionValue(buildingData, resourceObject, ref interactionValuePositions);
             }
 
             handler.EventsData = interactionValuePositions;
         }
-        
+
+        private static void AddInteractionValue
+        (
+            IResourceObjectData buildingData, 
+            IGiveResources resourceObject,
+            ref List<BuildingsInteractionEventData> interactionValuePositions
+        )
+        {
+            var isInteraction = false;
+
+            var resources = new ResourcesList();
+            
+            if (buildingData.TryGetValue(resourceObject.ResourceObjectData, out var valueA))
+            {
+                resources.Add(valueA);
+                
+                isInteraction = true;
+            }
+
+            if (resourceObject.ResourceObjectData.TryGetValue(buildingData, out var valueB))
+            {
+                resources.Add(valueB);
+                
+                isInteraction = true;
+            }
+
+            if (isInteraction == false)
+            {
+                return;
+            }
+
+            var eventData = new BuildingsInteractionEventData(resourceObject.Position, resources);
+
+            interactionValuePositions.Add(eventData);
+        }
+
         private IEnumerable<IGiveResources> GetIGiveResourcesObjectsInRadius(Vector3 position, float radius)
         {
             var sqrRadius = radius * radius;
