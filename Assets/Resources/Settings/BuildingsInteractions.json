@@ -1,0 +1,28 @@
+{
+	"Dumb": 
+	[
+		{
+			"ResourceObjectKey": "Tree",
+			"ResourceTypeKey": "Wood",
+			"ResourceValue": 10
+		},
+		{
+			"ResourceObjectKey": "Dumb",
+			"ResourceTypeKey": "Wood",
+			"ResourceValue": -10
+		}
+	],
+	"Dumb2":
+	[
+		{
+			"ResourceObjectKey": "Stone",
+			"ResourceTypeKey": "Stone",
+			"ResourceValue": 10
+		},
+		{
+			"ResourceObjectKey": "Dumb2",
+			"ResourceTypeKey": "Stone",
+			"ResourceValue": -10
+		}
+	]
+}

@@ -16,16 +16,18 @@ namespace GameResources.Control.Economy.ResourcesHandler.Scripts
     [CreateAssetMenu(fileName = "ResourcesHandler", menuName = "Economy/ResourcesHandler")]
     public sealed class EconomyResourcesHandler : ScriptableObjectInstaller, ISaveProgress
     {
-        private const string FILE_NAME = "EconomyResources.json";
-
-        private static string JsonPath
-            => Application.persistentDataPath + FILE_NAME;
+        public event Action OnChangeValue;
 
         [NonSerialized]
         private JObject _jObject;
 
         [NonSerialized]
         private readonly List<IResourceHandler> _handlers = new List<IResourceHandler>();
+     
+        private const string FILE_NAME = "EconomyResources.json";
+
+        private static string JsonPath
+            => Application.persistentDataPath + FILE_NAME;
         
         public override void InstallBindings()
         {
@@ -51,7 +53,7 @@ namespace GameResources.Control.Economy.ResourcesHandler.Scripts
             using var writer = new JsonTextWriter(file);
             saveJObject.WriteTo(writer);
         }
-
+        
         public bool TryGetHandler(IResourceType resourceType, out IResourceHandler handler)
         {
             handler = _handlers.FirstOrDefault(handler => handler.ResourceType == resourceType);
@@ -78,7 +80,33 @@ namespace GameResources.Control.Economy.ResourcesHandler.Scripts
 
             return false;
         }
+        
+        public bool Spend(IEnumerable<Resource> prices)
+        {
+            var isFail =
+            (
+                from price in prices 
+                from handler in _handlers 
+                where handler.ResourceType.Equals(price.Type)
+                select handler.Spend(price.Value) == false
+            ).Any();
 
+            return isFail == false;
+        }
+        
+        public bool IsEnoughResources(IEnumerable<Resource> prices)
+        {
+            var isFail =
+            (
+                from price in prices 
+                from handler in _handlers 
+                where handler.ResourceType.Equals(price.Type)
+                select handler.Value < price.Value
+            ).Any();
+
+            return isFail == false;
+        }
+        
         private void BindHandler(Type handlerType)
         {
             var handler = GetHandlerByHandlerType(handlerType);
@@ -97,15 +125,18 @@ namespace GameResources.Control.Economy.ResourcesHandler.Scripts
             {
                 return handler;
             }
-
+            
             handler = (IResourceHandler)Activator.CreateInstance(handlerType);
             handler.ChangeWithoutNotify(GetValue(handler.ResourceType.Key));
-                
+
+            handler.OnValueChanged += InvokeOnChangeValue;
+            
             _handlers.Add(handler);
 
             return handler;
         }
-
+        
+        private void InvokeOnChangeValue() => OnChangeValue?.Invoke();
         private void GetJObject()
         {
             try

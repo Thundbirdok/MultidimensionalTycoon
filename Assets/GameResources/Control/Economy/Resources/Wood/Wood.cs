@@ -22,5 +22,9 @@ namespace GameResources.Control.Economy.Resources.Wood
             
             return obj.GetType() == GetType();
         }
+
+        protected bool Equals(Wood other) => true;
+
+        public override int GetHashCode() => GetType().GetHashCode();
     }
 }

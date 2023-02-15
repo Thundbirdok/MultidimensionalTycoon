@@ -29,8 +29,8 @@ namespace GameResources.Control.Economy.Resources.Scripts
         {
             if (Resources.TryGetValue(resource.Type, out var value))
             {
-                value.Value += resource.Value;
-                
+                Resources[resource.Type] = resource + value;
+
                 return;
             }
             

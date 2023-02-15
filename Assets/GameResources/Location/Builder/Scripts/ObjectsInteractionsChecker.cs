@@ -23,7 +23,7 @@ namespace GameResources.Location.Builder.Scripts
         {
             var resources = GetIGiveResourcesObjectsInRadius
             (
-                position, 
+                position,
                 buildingData.InteractionRadius
             );
 
@@ -83,7 +83,11 @@ namespace GameResources.Location.Builder.Scripts
             interactionValuePositions.Add(eventData);
         }
 
-        private IEnumerable<IGiveResources> GetIGiveResourcesObjectsInRadius(Vector3 position, float radius)
+        private IEnumerable<IGiveResources> GetIGiveResourcesObjectsInRadius
+        (
+            Vector3 position,
+            float radius
+        )
         {
             var sqrRadius = radius * radius;
 

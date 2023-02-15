@@ -8,7 +8,8 @@ namespace GameResources.Control.Economy.ResourceProgress.Scripts
 
         public bool IsCompleted => _currentStage == _totalStages;
         
-        public IslandResourceProgress(int numberOfStages, StageResources[] stages) {
+        public IslandResourceProgress(int numberOfStages, StageResources[] stages) 
+        {
             _currentStage = 0;
             _totalStages = numberOfStages;
             _stages = stages;

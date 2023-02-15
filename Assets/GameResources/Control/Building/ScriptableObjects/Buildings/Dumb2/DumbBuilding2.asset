@@ -12,15 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db0bd3172a496054f9b57b8878906bd8, type: 3}
   m_Name: DumbBuilding2
   m_EditorClassIdentifier: 
-  key: Dumb2
-  size: 3
+  <Key>k__BackingField: Dumb2
+  <Size>k__BackingField: 3
   interactionRadius: 5
-  interactions:
-  - <Data>k__BackingField: {fileID: 11400000, guid: 6a9b59d5c31c2b242860c0142f39c455, type: 2}
-    <Value>k__BackingField:
-      <Value>k__BackingField: 10
-      <Key>k__BackingField: stone
-  - <Data>k__BackingField: {fileID: 11400000}
-    <Value>k__BackingField:
-      <Value>k__BackingField: -10
-      <Key>k__BackingField: stone

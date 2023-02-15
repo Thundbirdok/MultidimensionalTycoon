@@ -1,9 +1,10 @@
-using UnityEngine;
-using UnityEngine.UI;
-using Zenject;
-
-namespace GameResources.Control.Builder.Scripts
+namespace GameResources.Control.BuildingPacks
 {
+    using GameResources.Control.Builder.Scripts;
+    using UnityEngine;
+    using UnityEngine.UI;
+    using Zenject;
+
     public sealed class BuildingsPacksCheat : MonoBehaviour
     {
         [SerializeField]

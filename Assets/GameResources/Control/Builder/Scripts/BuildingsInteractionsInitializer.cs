@@ -10,12 +10,17 @@ using Zenject;
 
 namespace GameResources.Control.Builder.Scripts
 {
+    using System.Linq;
+    using GameResources.Control.ResourceObjects.Scripts;
+    using Newtonsoft.Json;
+
     public class BuildingsInteractionsInitializer : MonoBehaviour
     {
         public event Action OnInited;
         
         public bool IsInited { get; private set; }
-        
+
+        private ResourceObjectsDataCollector _resourceObjectsDataCollector;
         private BuildingsDataCollector _buildingsDataCollector;
         private EconomyResourcesHandler _economyResourcesHandler;
         
@@ -26,10 +31,12 @@ namespace GameResources.Control.Builder.Scripts
         [Inject]
         private void Construct
         (
+            ResourceObjectsDataCollector resourceObjectsDataCollector,
             BuildingsDataCollector buildingsDataCollector,
             EconomyResourcesHandler economyResourcesHandler
         )
         {
+            _resourceObjectsDataCollector = resourceObjectsDataCollector;
             _buildingsDataCollector = buildingsDataCollector;
             _economyResourcesHandler = economyResourcesHandler;
             
@@ -40,7 +47,7 @@ namespace GameResources.Control.Builder.Scripts
                 return;
             }
 
-            if (_buildingsDataCollector == null)
+            if (_buildingsDataCollector.IsInited == false)
             {
                 _buildingsDataCollector.OnInited += Init;
 
@@ -61,10 +68,23 @@ namespace GameResources.Control.Builder.Scripts
 
             foreach (var building in _buildingsDataCollector.Buildings)
             {
-                foreach (var buildingToken in _jObject)
+                if (building.Key.Equals(""))
                 {
-                    building.SetInteractions(GetInteractions(buildingToken.Value));
+                    Debug.LogError("Building key is empty!", building);
+                    
+                    continue;
                 }
+                
+                var buildingToken = _jObject[building.Key];
+
+                if (buildingToken == null)
+                {
+                    Debug.LogError("Building key in token not found!", building);
+                    
+                    continue;
+                }
+                
+                building.SetInteractions(GetInteractions(buildingToken));
             }
 
             IsInited = true;
@@ -88,49 +108,159 @@ namespace GameResources.Control.Builder.Scripts
             }
         }
 
-        private List<BuildingsInteractionValue> GetInteractions(JToken packToken)
+        private List<BuildingsInteractionValue> GetInteractions(JToken buildingToken)
         {
-            if (packToken == null)
+            if (buildingToken == null)
             {
                 return null;
             }
             
             var interactions = new List<BuildingsInteractionValue>();
             
-            foreach (var interactionToken in packToken)
+            foreach (var interactionToken in buildingToken)
             {
-                try
-                {
-                    if (interactionToken == null)
-                    {
-                        continue;
-                    }
-
-                    if (int.TryParse(interactionToken.ToString(), out var value) == false)
-                    {
-                        continue;
-                    }
-
-                    var resourceObjectData = FindResourceObjectData;
-
-                    if (_economyResourcesHandler.TryGetKeyType(interactionToken, out var type) == false)
-                    {
-                        continue;
-                    }
-                    
-                    var resource = new Resource(type, interactionToken);
-                    
-                    var interaction = new BuildingsInteractionValue(resourceObjectData, resource);
-                    
-                    interactions.Add(interaction);
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
+                GetInteraction(interactionToken, ref interactions);
             }
 
             return interactions;
+        }
+
+        private void GetInteraction
+            (
+            JToken interactionToken,
+            ref List<BuildingsInteractionValue> interactions
+            )
+        {
+            var isSerializationGet = TryGetInteractionSerialization
+            (
+                interactionToken,
+                out var interactionSerialization
+            );
+
+            if (isSerializationGet == false)
+            {
+                return;
+            }
+
+            var isResourceObjectDataGet = TryGetResourceObjectData
+            (
+                interactionSerialization.ResourceObjectKey,
+                out var resourceObjectData
+            );
+
+            if (isResourceObjectDataGet == false)
+            {
+                return;
+            }
+
+            var isTypeFound = _economyResourcesHandler.TryGetKeyType
+            (
+                interactionSerialization.ResourceTypeKey,
+                out var type
+            );
+
+            if (isTypeFound == false)
+            {
+                return;
+            }
+
+            var resource = new Resource(type, interactionSerialization.ResourceValue);
+
+            var interaction = new BuildingsInteractionValue(resourceObjectData, resource);
+
+            interactions.Add(interaction);
+        }
+
+        private static bool TryGetInteractionSerialization
+        (
+            JToken interactionToken, 
+            out InteractionSerialization interactionSerialization
+        )
+        {
+            if (interactionToken == null)
+            {
+                interactionSerialization = null;
+                
+                return false;
+            }
+
+            try
+            {
+                interactionSerialization = interactionToken
+                        .ToObject(typeof(InteractionSerialization))
+                    as InteractionSerialization;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                
+                interactionSerialization = null;
+                
+                return false;
+            }
+            
+            return interactionSerialization is { IsKeysFound: true };
+        }
+
+        private bool TryGetResourceObjectData(string resourceObjectKey, out ResourceObjectData data)
+        {
+            var buildingData = _buildingsDataCollector.Buildings
+                .FirstOrDefault
+                (
+                    building => building.Key.Equals
+                    (
+                        resourceObjectKey,
+                        StringComparison.InvariantCultureIgnoreCase
+                    )
+                );
+
+            if (buildingData != null)
+            {
+                data = buildingData;
+
+                return true;
+            }
+
+            var resourceObjectData = _resourceObjectsDataCollector.ResourceObjects
+                .FirstOrDefault
+                (
+                    building => building.Key.Equals
+                    (
+                        resourceObjectKey,
+                        StringComparison.InvariantCultureIgnoreCase
+                    )
+                );
+
+            if (resourceObjectData != null)
+            {
+                data = resourceObjectData;
+
+                return true;
+            }
+            
+            data = null;
+                
+            return false;
+        }
+
+        [Serializable]
+        [JsonObject(MemberSerialization.Fields)]
+        public class InteractionSerialization
+        {
+            [JsonProperty("ResourceObjectKey")]
+            private string _resourceObjectKey;
+            public string ResourceObjectKey => _resourceObjectKey;
+            
+            [JsonProperty("ResourceTypeKey")]
+            private string _resourceTypeKey;
+            public string ResourceTypeKey => _resourceTypeKey;
+            
+            [JsonProperty("ResourceValue")]
+            private int _resourceValue;
+            public int ResourceValue => _resourceValue;
+
+            public bool IsKeysFound => _resourceObjectKey.Equals("") == false
+                                       && _resourceTypeKey.Equals("") == false;
         }
     }
 }

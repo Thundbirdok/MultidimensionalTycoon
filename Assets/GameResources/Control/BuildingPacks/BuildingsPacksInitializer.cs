@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json.Linq;
-using UnityEngine;
-
-namespace GameResources.Control.Builder.Scripts
+namespace GameResources.Control.BuildingPacks
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using GameResources.Control.Builder.Scripts;
+    using Newtonsoft.Json.Linq;
+    using UnityEngine;
+
     public sealed class BuildingsPacksInitializer
     {
         public event Action OnInited;

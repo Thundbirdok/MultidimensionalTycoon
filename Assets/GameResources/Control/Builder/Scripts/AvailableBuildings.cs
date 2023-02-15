@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace GameResources.Control.Builder.Scripts
 {
+    using GameResources.Control.BuildingPacks;
+
     [CreateAssetMenu(fileName = "AvailableBuildings", menuName = "Builder/AvailableBuildings")]
     public sealed class AvailableBuildings : ScriptableObject
     {

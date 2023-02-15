@@ -22,5 +22,9 @@ namespace GameResources.Control.Economy.Resources.Stone
             
             return obj.GetType() == GetType();
         }
+
+        protected bool Equals(Stone other) => true;
+
+        public override int GetHashCode() => GetType().GetHashCode();
     }
 }

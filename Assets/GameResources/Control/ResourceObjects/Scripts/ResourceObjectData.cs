@@ -6,15 +6,12 @@ namespace GameResources.Control.ResourceObjects.Scripts
     [CreateAssetMenu(fileName = "ResourceObject", menuName = "ResourceObject/ResourceObjectData")]
     public class ResourceObjectData : ScriptableObject, IResourceObjectData
     {
-        [SerializeField]
-        private string key;
+        [field: SerializeField]
+        public string Key { get; private set; }
 
-        public string Key => key;
+        [field: SerializeField]
+        public int Size { get; private set; } = 1;
 
-        [SerializeField]
-        private int size = 1;
-        public int Size => size;
-        
         public bool TryGetValue(IResourceObjectData data, out Resource value)
         {
             value = null;

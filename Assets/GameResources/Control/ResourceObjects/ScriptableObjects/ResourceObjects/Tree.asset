@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d7e89a22afcfcd46a61739ec61c088e, type: 3}
-  m_Name: Stone
+  m_Name: Tree
   m_EditorClassIdentifier: 
-  key: Stone
-  size: 2
+  <Key>k__BackingField: Tree
+  <Size>k__BackingField: 1

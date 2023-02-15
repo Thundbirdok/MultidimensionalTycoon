@@ -16,9 +16,13 @@ namespace GameResources.Control.Building.Scripts
         private List<BuildingsInteractionValue> _interactions = new List<BuildingsInteractionValue>();
         public IReadOnlyList<BuildingsInteractionValue> Interactions => _interactions;
 
-        public bool TryGetValue(IResourceObjectData data, out Resource value)
+        public new bool TryGetValue(IResourceObjectData data, out Resource value)
         {
-            var interactionValue = _interactions.FirstOrDefault(x => x.Data.Equals(data));
+            var interactionValue = _interactions
+                .FirstOrDefault
+                (
+                    x => x.Data.Equals(data)
+                );
 
             if (interactionValue == null)
             {

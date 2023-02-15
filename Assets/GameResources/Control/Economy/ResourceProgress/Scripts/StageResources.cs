@@ -6,7 +6,8 @@ namespace GameResources.Control.Economy.ResourceProgress.Scripts
     {
         public IResourceType[] Resources { get; set; }
 
-        public StageResources(IResourceType[] resources) {
+        public StageResources(IResourceType[] resources) 
+        {
             Resources = resources;
         }
     }
