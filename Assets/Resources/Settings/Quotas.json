@@ -1,0 +1,8 @@
+[
+	[ { "TypeKey": "Wood", "Value": 100 }, { "TypeKey": "Stone", "Value": 50 } ],
+	[ { "TypeKey": "Wood", "Value": 200 }, { "TypeKey": "Stone", "Value": 150 } ],
+	[ { "TypeKey": "Wood", "Value": 400 }, { "TypeKey": "Stone", "Value": 100 } ],
+	[ { "TypeKey": "Wood", "Value": 400 }, { "TypeKey": "Stone", "Value": 50 } ],
+	[ { "TypeKey": "Wood", "Value": 400 }, { "TypeKey": "Stone", "Value": 50 } ],
+	[ { "TypeKey": "Wood", "Value": 400 }, { "TypeKey": "Stone", "Value": 50 } ]
+]

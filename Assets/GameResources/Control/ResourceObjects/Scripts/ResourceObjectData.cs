@@ -12,7 +12,7 @@ namespace GameResources.Control.ResourceObjects.Scripts
         [field: SerializeField]
         public int Size { get; private set; } = 1;
 
-        public bool TryGetValue(IResourceObjectData data, out Resource value)
+        public bool TryGetInteractionValue(IResourceObjectData data, out Resource value)
         {
             value = null;
 

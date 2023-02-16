@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace GameResources.Control.Building.Scripts
 {
+    using System;
+
     [CreateAssetMenu(fileName = "Building", menuName = "Building/BuildingData")]
     public sealed class BuildingData : ResourceObjectData, IResourceObjectData
     {
@@ -13,10 +15,10 @@ namespace GameResources.Control.Building.Scripts
         private float interactionRadius;
         public float InteractionRadius => interactionRadius;
         
+        [NonSerialized]
         private List<BuildingsInteractionValue> _interactions = new List<BuildingsInteractionValue>();
-        public IReadOnlyList<BuildingsInteractionValue> Interactions => _interactions;
 
-        public new bool TryGetValue(IResourceObjectData data, out Resource value)
+        public new bool TryGetInteractionValue(IResourceObjectData data, out Resource value)
         {
             var interactionValue = _interactions
                 .FirstOrDefault

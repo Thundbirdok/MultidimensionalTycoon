@@ -8,6 +8,6 @@ namespace GameResources.Control.ResourceObjects.Scripts
 
         public int Size { get; }
 
-        public bool TryGetValue(IResourceObjectData data, out Resource value);
+        public bool TryGetInteractionValue(IResourceObjectData data, out Resource value);
     }
 }

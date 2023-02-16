@@ -53,7 +53,7 @@ namespace GameResources.Control.Economy.Resources.Stone
                 return;
             }
 
-            _handler.OnValueChanged += ShowValueChanged;
+            _handler.OnChangedValue += ShowValueChanged;
             _handler.OnNotEnough += TurnRed;
 
             _isSubscribed = true;
@@ -63,7 +63,7 @@ namespace GameResources.Control.Economy.Resources.Stone
         {
             if (_handler != null)
             {
-                _handler.OnValueChanged -= ShowValueChanged;
+                _handler.OnChangedValue -= ShowValueChanged;
                 _handler.OnNotEnough -= TurnRed;
             }
 

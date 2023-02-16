@@ -5,14 +5,16 @@ using System.Linq;
 using GameResources.Control.Economy.Resources.Scripts;
 using GameResources.Control.Economy.Resources.Stone;
 using GameResources.Control.Economy.Resources.Wood;
+using GameResources.Save.Scripts;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Zenject;
 
 namespace GameResources.Control.Economy.ResourcesHandler.Scripts
 {
-    [CreateAssetMenu(fileName = "ResourcesHandler", menuName = "Economy/ResourcesHandler")]
-    public sealed class EconomyResourcesHandler : ScriptableObjectInstaller
+    [CreateAssetMenu(fileName = "MetaResourcesHandler", menuName = "Economy/MetaResourcesHandler")]
+    public sealed class MetaEconomyResourcesHandler : ScriptableObjectInstaller, ISaveProgress
     {
         public event Action OnChangedValue;
 
@@ -24,8 +26,18 @@ namespace GameResources.Control.Economy.ResourcesHandler.Scripts
         [NonSerialized]
         private readonly List<IResourceHandler> _handlers = new List<IResourceHandler>();
 
+        private const string FILE_NAME = "EconomyResources.json";
+
+        private static string JsonPath
+            => Application.persistentDataPath + FILE_NAME;
+        
         public override void InstallBindings()
         {
+            if (_jObject == null)
+            {
+                GetJObject();
+            }
+            
             Container
                 .BindInterfacesAndSelfTo<EconomyResourcesHandler>()
                 .FromInstance(this)
@@ -33,6 +45,15 @@ namespace GameResources.Control.Economy.ResourcesHandler.Scripts
             
             BindHandler(typeof(WoodResourceHandler));
             BindHandler(typeof(StoneResourceHandler));
+        }
+
+        public void Save()
+        {
+            var saveJObject = CollectResourcesToJObject();
+
+            using var file = File.CreateText(JsonPath);
+            using var writer = new JsonTextWriter(file);
+            saveJObject.WriteTo(writer);
         }
         
         public bool TryGetHandler(IResourceType resourceType, out IResourceHandler handler)
@@ -108,6 +129,7 @@ namespace GameResources.Control.Economy.ResourcesHandler.Scripts
             }
             
             handler = (IResourceHandler)Activator.CreateInstance(handlerType);
+            handler.ChangeWithoutNotify(GetValue(handler.ResourceType.Key));
 
             handler.OnChangedValue += InvokeOnChangeChangedValue;
             
@@ -117,5 +139,40 @@ namespace GameResources.Control.Economy.ResourcesHandler.Scripts
         }
         
         private void InvokeOnChangeChangedValue() => OnChangedValue?.Invoke();
+        private void GetJObject()
+        {
+            try
+            {
+                using var file = File.OpenText(JsonPath);
+                using var reader = new JsonTextReader(file);
+
+                _jObject = (JObject)JToken.ReadFrom(reader);
+            }
+            catch (FileNotFoundException)
+            {
+                _jObject = new JObject();
+            }
+        }
+
+        private int GetValue(string key)
+        {
+            var token = _jObject.SelectToken(key);
+
+            return token?.Value<int>() ?? 0;
+        }
+
+        private JObject CollectResourcesToJObject()
+        {
+            var collection = Container.ResolveAll<IResourceHandler>();
+
+            var saveJObject = new JObject();
+
+            foreach (var handler in collection)
+            {
+                saveJObject.Add(handler.ResourceType.Key, handler.Value);
+            }
+
+            return saveJObject;
+        }
     }
 }

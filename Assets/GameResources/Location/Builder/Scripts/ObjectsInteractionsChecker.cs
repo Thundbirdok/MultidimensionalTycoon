@@ -59,14 +59,14 @@ namespace GameResources.Location.Builder.Scripts
 
             var resources = new ResourcesList();
             
-            if (buildingData.TryGetValue(resourceObject.ResourceObjectData, out var valueA))
+            if (buildingData.TryGetInteractionValue(resourceObject.ResourceObjectData, out var valueA))
             {
                 resources.Add(valueA);
                 
                 isInteraction = true;
             }
 
-            if (resourceObject.ResourceObjectData.TryGetValue(buildingData, out var valueB))
+            if (resourceObject.ResourceObjectData.TryGetInteractionValue(buildingData, out var valueB))
             {
                 resources.Add(valueB);
                 

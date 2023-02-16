@@ -53,7 +53,7 @@ namespace GameResources.Control.Economy.Resources.Wood
                 return;
             }
 
-            _handler.OnValueChanged += ShowValue;
+            _handler.OnChangedValue += ShowValue;
             _handler.OnNotEnough += TurnRed;
 
             _isSubscribed = true;
@@ -63,7 +63,7 @@ namespace GameResources.Control.Economy.Resources.Wood
         {
             if (_handler != null)
             {
-                _handler.OnValueChanged -= ShowValue;
+                _handler.OnChangedValue -= ShowValue;
                 _handler.OnNotEnough -= TurnRed;
             }
 

@@ -1,11 +1,8 @@
 namespace GameResources.Control.BuildingPacks
 {
-    using System.Collections.Generic;
     using GameResources.Control.Builder.Scripts;
-    using GameResources.Control.Economy.Resources.Scripts;
-    using GameResources.Control.Economy.Resources.Stone;
-    using GameResources.Control.Economy.Resources.Wood;
     using GameResources.Control.Economy.ResourcesHandler.Scripts;
+    using GameResources.Control.Economy.ResourcesQuotas.Scripts;
     using UnityEngine;
     using Zenject;
 
@@ -19,7 +16,7 @@ namespace GameResources.Control.BuildingPacks
 
         private EconomyResourcesHandler _economyResourcesHandler;
 
-        private List<Resource> _packPrice;
+        private ResourcesQuotas _resourcesQuotas;
         
         [Inject]
         private void Construct
@@ -27,7 +24,8 @@ namespace GameResources.Control.BuildingPacks
             AvailableBuildings availableBuildings, 
             BuilderEventHandler builderEventHandler, 
             BuildingsDataCollector buildingsDataCollector,
-            EconomyResourcesHandler economyResourcesHandler
+            EconomyResourcesHandler economyResourcesHandler,
+            ResourcesQuotas resourcesQuotas
         )
         {
             _availableBuildings = availableBuildings;
@@ -37,16 +35,12 @@ namespace GameResources.Control.BuildingPacks
             
             _buildingsPacksInitializer = new BuildingsPacksInitializer(buildingsDataCollector);
 
-            _packPrice = new List<Resource>()
-            {
-                new Resource(new Wood(), 100),
-                new Resource( new Stone(), 50)
-            };
+            _resourcesQuotas = resourcesQuotas;
             
             _builderEventHandler.OnNoBuildings += AddNewPack;
             _builderEventHandler.OnRequestAddPack += AddNewPack;
 
-            _economyResourcesHandler.OnChangeValue += TryAddPack;
+            _economyResourcesHandler.OnChangedValue += TryAddPack;
             
             if (_buildingsPacksInitializer.IsInited)
             {
@@ -63,7 +57,7 @@ namespace GameResources.Control.BuildingPacks
             _buildingsPacksInitializer.OnInited -= AddNewPack;
             _builderEventHandler.OnNoBuildings -= AddNewPack;
             _builderEventHandler.OnRequestAddPack -= AddNewPack;
-            _economyResourcesHandler.OnChangeValue -= TryAddPack;
+            _economyResourcesHandler.OnChangedValue -= TryAddPack;
         }
 
         private void OnDestroy()
@@ -84,13 +78,16 @@ namespace GameResources.Control.BuildingPacks
         
         private void TryAddPack()
         {
-            if (_economyResourcesHandler.IsEnoughResources(_packPrice) == false)
+            if (_resourcesQuotas.IsAllQuotasCompleted)
             {
                 return;
             }
 
-            _economyResourcesHandler.Spend(_packPrice);
-            
+            if (_resourcesQuotas.TryCompleteQuota(_economyResourcesHandler.Resources))
+            {
+                _economyResourcesHandler.Spend(_resourcesQuotas.PreviousQuota.Resources.Values);
+            }
+
             AddNewPack();
         }
     }

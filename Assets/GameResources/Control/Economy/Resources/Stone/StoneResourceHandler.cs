@@ -5,11 +5,13 @@ namespace GameResources.Control.Economy.Resources.Stone
 {
     public sealed class StoneResourceHandler : IResourceHandler
     {
-        public event Action OnValueChanged;
+        public event Action OnChangedValue;
         public event Action OnNotEnough;
 
+        public Resource Resource => new Resource(new Stone(), _handler.Value);
+        
         public int Value => _handler.Value;
-
+        
         public IResourceType ResourceType { get; } = new Stone();
 
         private IntValueHandler _handler;
@@ -36,7 +38,7 @@ namespace GameResources.Control.Economy.Resources.Stone
 
         public void ChangeWithoutNotify(int value) => _handler.ChangeWithoutNotify(value);
 
-        private void OnChangeValueInvoke() => OnValueChanged?.Invoke();
+        private void OnChangeValueInvoke() => OnChangedValue?.Invoke();
 
         private void OnNotEnoughInvoke() => OnNotEnough?.Invoke();
     }

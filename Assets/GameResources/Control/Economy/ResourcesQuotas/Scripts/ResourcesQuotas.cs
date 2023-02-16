@@ -2,33 +2,58 @@ namespace GameResources.Control.Economy.ResourcesQuotas.Scripts
 {
     using System;
     using System.Collections.Generic;
+    using GameResources.Control.Economy.Resources.Scripts;
+    using GameResources.Control.Economy.ResourcesHandler.Scripts;
 
     public class ResourcesQuotas
     {
-        private List<ResourcesQuota> _quotas;
-        public IReadOnlyList<ResourcesQuota> Quotas => _quotas;
+        public event Action OnCompletedQuota; 
+        
+        private StageQuota[] _quotas;
+        public IReadOnlyList<StageQuota> Quotas => _quotas;
 
         public int CompletedQuotas { get; private set; }
 
-        public ResourcesQuota CurrentQuota => 
-            CompletedQuotas < Quotas.Count 
-                ? Quotas[CompletedQuotas] 
-                : null;
-        
-        public void CompleteQuota() => ++CompletedQuotas;
+        public bool IsAllQuotasCompleted => CompletedQuotas >= Quotas.Count;
 
-        public class ResourcesQuota
+
+        public StageQuota CurrentQuota =>
+            IsAllQuotasCompleted
+                ? null
+                : Quotas[CompletedQuotas];
+
+        public StageQuota PreviousQuota =>
+            CompletedQuotas == 0
+                ? null
+                : Quotas[CompletedQuotas - 1];
+
+        public ResourcesQuotas(EconomyResourcesHandler economyResourcesHandler)
         {
-            public List<IResourceQuota> quota;
+            _quotas = ResourcesQuotasFileReader.GetQuotas(economyResourcesHandler);
         }
 
-        public interface IResourceQuota
+        public bool TryCompleteQuota(IEnumerable<Resource> currentResources)
         {
-            public string Key { get; }
+            if (IsQuotaComplete(currentResources) == false)
+            {
+                return false;
+            }
+            
+            ++CompletedQuotas;
 
-            public Type ResourceType { get; }
+            OnCompletedQuota?.Invoke();
+            
+            return true;
+        }
 
-            public int Value { get; }
+        private bool IsQuotaComplete(IEnumerable<Resource> currentResources)
+        {
+            if (IsAllQuotasCompleted)
+            {
+                return false;
+            }
+
+            return CurrentQuota.IsQuotaComplete(currentResources);
         }
     }
 }

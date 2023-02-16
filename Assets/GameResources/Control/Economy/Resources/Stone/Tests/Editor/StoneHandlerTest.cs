@@ -34,11 +34,11 @@ namespace GameResources.Control.Economy.Resources.Stone.Tests.Editor
             
             handler.ChangeWithoutNotify(0);
 
-            handler.OnValueChanged += OnValueChanged;
+            handler.OnChangedValue += OnValueChanged;
             
             handler.Add(10);
 
-            handler.OnValueChanged -= OnValueChanged;
+            handler.OnChangedValue -= OnValueChanged;
 
             // Assert.
             
